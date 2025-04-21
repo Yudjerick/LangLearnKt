@@ -5,16 +5,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.langlearnkt.data.Lesson
 import com.example.langlearnkt.data.OrderTask
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class OrderTaskViewModel: ViewModel() {
-    var orderTask = OrderTask(0,"", "", listOf(
-        "we", "are", "the", "champions"), listOf("losers", "a")
-    )
+class OrderTaskViewModel(
+    var lesson: Lesson
+): ViewModel() {
+    var currentTaskIndex: Int = 0
+        set(value){
+            field = value
+            orderTask = lesson.orderTasks[value]
+        }
+    var orderTask = lesson.orderTasks[currentTaskIndex]
         set(value){
             field = value
             _wordBank.value = getBankFromTask(value)
@@ -52,6 +58,14 @@ class OrderTaskViewModel: ViewModel() {
         else{
             _taskStatus.value = TaskStatus.Wrong
         }
+    }
+
+    fun nextTask(){
+        if(currentTaskIndex < lesson.orderTasks.count() - 1){
+
+            currentTaskIndex++
+        }
+
     }
 
     private fun getBankFromTask( task: OrderTask): List<BankWord> {

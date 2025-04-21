@@ -73,5 +73,8 @@ fun OrderTaskScreen(navController: NavController, viewModel: OrderTaskViewModel 
                 )
             OrderTaskViewModel.TaskStatus.Unchecked -> {}
         }
+        Button(onClick = {viewModel.nextTask()}) {
+            Text("Дальше")
+        }
     }
 }
