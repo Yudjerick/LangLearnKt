@@ -29,21 +29,38 @@ class TitleParagraphTaskViewModel(
     val paragraphs : LiveData<List<ParagraphData>> =_paragraphs
 
     private val _titleBank = MutableLiveData<List<TitleBankItem>>(
-        task.paragraphs.shuffled().map { x-> TitleBankItem( x.title) }
+        task.paragraphs.shuffled().map { x-> TitleBankItem(x) }
     )
     val titleBank: LiveData<List<TitleBankItem>> = _titleBank
 
     private val _selectedTitle = MutableLiveData<TitleBankItem>()
     val selectedTitle: LiveData<TitleBankItem> = _selectedTitle
 
+    private val _titleParagraphMaps = MutableLiveData<List<TitleParagraphMap>>(
+        task.paragraphs.map { x->TitleParagraphMap(x) }
+    )
+    val titleParagraphMaps: LiveData<List<TitleParagraphMap>> = _titleParagraphMaps
+
+    private val _selectedMap = MutableLiveData<TitleParagraphMap>()
+    val selectedMap: LiveData<TitleParagraphMap> = _selectedMap
+
     fun onTitleClick(title: TitleBankItem)
     {
         _selectedTitle.value = title
     }
 
+    fun onMapClick(map: TitleParagraphMap){
+        _selectedMap.value = map
+    }
+
     data class TitleBankItem(
-        val title: String,
+        val paragraph: ParagraphData,
         val active: Boolean = true
+    )
+
+    data class TitleParagraphMap(
+        val letterParagraph: ParagraphData,
+        val numberParagraph: ParagraphData? = null
     )
 
 }

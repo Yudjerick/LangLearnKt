@@ -99,16 +99,22 @@ fun TitleParagraphTaskScreen(viewModel: TitleParagraphTaskViewModel = viewModel(
                     .padding(horizontal = 15.dp)
                     .verticalScroll(rememberScrollState())
             ) {
+                val selectedMap = viewModel.selectedMap.observeAsState().value
                 Spacer(Modifier.height(15.dp))
-                for(paragraph in viewModel.paragraphs.observeAsState(listOf()).value)
+                for(map in viewModel.titleParagraphMaps.observeAsState(listOf()).value)
                 {
-                    ParagraphTitleMapItem(paragraph.letter, ""){
-                        scope.launch {
-                            paragraphPositions[paragraph]?.let { pos ->
-                                scrollState.animateScrollTo(pos)
+                    ParagraphTitleMapItem(
+                        mapData = map,
+                        selectedMap,
+                        onMapClick = { viewModel.onMapClick(map) },
+                        onLetterClick = {
+                            scope.launch {
+                                paragraphPositions[map.letterParagraph]?.let { pos ->
+                                    scrollState.animateScrollTo(pos)
+                                }
                             }
                         }
-                    }
+                    )
                 }
                 Spacer(Modifier.height(15.dp))
             }
@@ -130,7 +136,7 @@ fun TitleParagraphTaskScreen(viewModel: TitleParagraphTaskViewModel = viewModel(
                         else
                             ButtonDefaults.buttonColors()
                     ) {
-                        Text(title.title)
+                        Text(title.paragraph.title)
                     }
                 }
                 Spacer(Modifier.height(15.dp))
@@ -144,8 +150,9 @@ fun TitleParagraphTaskScreen(viewModel: TitleParagraphTaskViewModel = viewModel(
 
 @Composable
 fun ParagraphTitleMapItem(
-    paragraphLetter: String,
-    titleNumber: String,
+    mapData: TitleParagraphTaskViewModel.TitleParagraphMap,
+    selectedMap: TitleParagraphTaskViewModel.TitleParagraphMap?,
+    onMapClick: () -> Unit,
     onLetterClick: () -> Unit
 ){
     Row(
@@ -160,7 +167,7 @@ fun ParagraphTitleMapItem(
             contentPadding = PaddingValues(0.dp),
             onClick = onLetterClick
         ) {
-            Text(paragraphLetter)
+            Text(mapData.letterParagraph.letter)
         }
         Column(
             modifier = Modifier
@@ -172,13 +179,18 @@ fun ParagraphTitleMapItem(
                     .weight(1f )
                     .fillMaxWidth(),
                 contentPadding = PaddingValues(0.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent ),
-                onClick = {}
+                colors = if(mapData == selectedMap)
+                    ButtonDefaults.buttonColors(containerColor = Color.Cyan )
+                else
+                    ButtonDefaults.buttonColors(containerColor = Color.Transparent ),
+                onClick = onMapClick
             ) {
-                Text(
-                    text = titleNumber,
-                    color = Color.Black
-                )
+                mapData.numberParagraph?.let {
+                    Text(
+                        text = it.title,
+                        color = Color.Black
+                    )
+                }
             }
             Box(
                 modifier = Modifier
