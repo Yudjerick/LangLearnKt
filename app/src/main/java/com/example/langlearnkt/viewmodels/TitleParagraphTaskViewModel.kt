@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat.getString
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import com.example.langlearnkt.R
 import com.example.langlearnkt.data.Lesson
 import com.example.langlearnkt.data.ParagraphData
@@ -33,24 +34,76 @@ class TitleParagraphTaskViewModel(
     )
     val titleBank: LiveData<List<TitleBankItem>> = _titleBank
 
-    private val _selectedTitle = MutableLiveData<TitleBankItem>()
-    val selectedTitle: LiveData<TitleBankItem> = _selectedTitle
+    private val _selectedTitle = MutableLiveData<TitleBankItem?>()
+    val selectedTitle: LiveData<TitleBankItem?> = _selectedTitle
 
     private val _titleParagraphMaps = MutableLiveData<List<TitleParagraphMap>>(
         task.paragraphs.map { x->TitleParagraphMap(x) }
     )
     val titleParagraphMaps: LiveData<List<TitleParagraphMap>> = _titleParagraphMaps
 
-    private val _selectedMap = MutableLiveData<TitleParagraphMap>()
-    val selectedMap: LiveData<TitleParagraphMap> = _selectedMap
+    private val _selectedMap = MutableLiveData<TitleParagraphMap?>()
+    val selectedMap: LiveData<TitleParagraphMap?> = _selectedMap
 
     fun onTitleClick(title: TitleBankItem)
     {
-        _selectedTitle.value = title
+        if(_selectedTitle.value == title){
+            _selectedTitle.value = null
+        }
+        else{
+            _selectedTitle.value = title
+        }
+        tryCombineSelected()
     }
 
-    fun onMapClick(map: TitleParagraphMap){
-        _selectedMap.value = map
+    fun onMapClick(mapParam: TitleParagraphMap){
+        var map = mapParam
+        if(map.numberParagraph != null){
+            _titleBank.value = titleBank.value?.map { x ->
+                if (x.paragraph == map.numberParagraph)
+                    TitleBankItem(x.paragraph, active = true)
+                else x
+            }
+            val newMap = TitleParagraphMap(
+                letterParagraph = map.letterParagraph,
+                numberParagraph = null
+            )
+            map = newMap
+            _titleParagraphMaps.value = titleParagraphMaps.value
+                ?.map { x ->
+                    if (x == mapParam) newMap
+                    else x
+                }
+        }
+        if (_selectedMap.value == map){
+            _selectedMap.value = null
+        }
+        else{
+            _selectedMap.value = map
+        }
+        tryCombineSelected()
+    }
+
+    private fun tryCombineSelected(){
+        if(selectedMap.value!= null && selectedTitle.value != null){
+            _titleParagraphMaps.value = titleParagraphMaps.value
+                ?.map { x ->
+                    if (x == selectedMap.value)
+                        TitleParagraphMap(
+                            letterParagraph = selectedMap.value!!.letterParagraph,
+                            numberParagraph = selectedTitle.value?.paragraph
+                        )
+                    else x
+                }
+            _titleBank.value = _titleBank.value
+                ?.map { x ->
+                    if (x == selectedTitle.value)
+                        TitleBankItem(x.paragraph, active = false)
+                    else x
+                }
+            _selectedMap.value = null
+            _selectedTitle.value = null
+        }
     }
 
     data class TitleBankItem(
