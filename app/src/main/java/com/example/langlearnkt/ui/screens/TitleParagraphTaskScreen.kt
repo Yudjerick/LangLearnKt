@@ -136,7 +136,7 @@ fun TitleParagraphTaskScreen(viewModel: TitleParagraphTaskViewModel = viewModel(
                         else
                             ButtonDefaults.buttonColors()
                     ) {
-                        Text(title.paragraph.title)
+                        Text(title.number.toString() + " " + title.paragraph.title)
                     }
                 }
                 Spacer(Modifier.height(15.dp))
@@ -185,9 +185,9 @@ fun ParagraphTitleMapItem(
                     ButtonDefaults.buttonColors(containerColor = Color.Transparent ),
                 onClick = onMapClick
             ) {
-                mapData.numberParagraph?.let {
+                mapData.number?.let {
                     Text(
-                        text = it.title,
+                        text = it.toString(),
                         color = Color.Black
                     )
                 }

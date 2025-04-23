@@ -30,7 +30,7 @@ class TitleParagraphTaskViewModel(
     val paragraphs : LiveData<List<ParagraphData>> =_paragraphs
 
     private val _titleBank = MutableLiveData<List<TitleBankItem>>(
-        task.paragraphs.shuffled().map { x-> TitleBankItem(x) }
+        task.paragraphs.shuffled().mapIndexed{ i, x-> TitleBankItem(x, i) }
     )
     val titleBank: LiveData<List<TitleBankItem>> = _titleBank
 
@@ -38,7 +38,7 @@ class TitleParagraphTaskViewModel(
     val selectedTitle: LiveData<TitleBankItem?> = _selectedTitle
 
     private val _titleParagraphMaps = MutableLiveData<List<TitleParagraphMap>>(
-        task.paragraphs.map { x->TitleParagraphMap(x) }
+        task.paragraphs.map { x->TitleParagraphMap(x, null) }
     )
     val titleParagraphMaps: LiveData<List<TitleParagraphMap>> = _titleParagraphMaps
 
@@ -61,11 +61,12 @@ class TitleParagraphTaskViewModel(
         if(map.numberParagraph != null){
             _titleBank.value = titleBank.value?.map { x ->
                 if (x.paragraph == map.numberParagraph)
-                    TitleBankItem(x.paragraph, active = true)
+                    TitleBankItem(x.paragraph, x.number, active = true)
                 else x
             }
             val newMap = TitleParagraphMap(
                 letterParagraph = map.letterParagraph,
+                number = null,
                 numberParagraph = null
             )
             map = newMap
@@ -91,6 +92,7 @@ class TitleParagraphTaskViewModel(
                     if (x == selectedMap.value)
                         TitleParagraphMap(
                             letterParagraph = selectedMap.value!!.letterParagraph,
+                            number = selectedTitle.value!!.number,
                             numberParagraph = selectedTitle.value?.paragraph
                         )
                     else x
@@ -98,7 +100,7 @@ class TitleParagraphTaskViewModel(
             _titleBank.value = _titleBank.value
                 ?.map { x ->
                     if (x == selectedTitle.value)
-                        TitleBankItem(x.paragraph, active = false)
+                        TitleBankItem(x.paragraph, x.number, active = false)
                     else x
                 }
             _selectedMap.value = null
@@ -108,11 +110,13 @@ class TitleParagraphTaskViewModel(
 
     data class TitleBankItem(
         val paragraph: ParagraphData,
+        val number: Int,
         val active: Boolean = true
     )
 
     data class TitleParagraphMap(
         val letterParagraph: ParagraphData,
+        val number: Int?,
         val numberParagraph: ParagraphData? = null
     )
 
