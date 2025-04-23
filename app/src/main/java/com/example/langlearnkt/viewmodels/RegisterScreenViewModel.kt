@@ -1,4 +1,4 @@
-package com.example.langlearnkt.ui.screens
+package com.example.langlearnkt.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -30,6 +30,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
@@ -38,6 +41,9 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInParent
+import androidx.compose.ui.layout.positionOnScreen
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.Paragraph
@@ -46,36 +52,41 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.langlearnkt.R
+import com.example.langlearnkt.data.ParagraphData
+import com.example.langlearnkt.viewmodels.TitleParagraphTaskViewModel
+import kotlinx.coroutines.launch
 import org.w3c.dom.Text
 @Preview(showBackground = true)
 @Composable
-fun TitleParagraphTaskScreen(){
+fun TitleParagraphTaskScreen(viewModel: TitleParagraphTaskViewModel = viewModel()){
+    val scrollState = rememberScrollState()
+    val scope = rememberCoroutineScope()
+    val paragraphPositions = remember { mutableMapOf<ParagraphData, Int>() }
     Column {
         Box(
             Modifier.fillMaxHeight(0.6f).padding(horizontal = 15.dp)
         ) {
             Column(
                 modifier = Modifier
-                    .verticalScroll(rememberScrollState())
+                    .verticalScroll(scrollState)
                     .fillMaxWidth()
             ) {
                 Spacer(Modifier.height(20.dp))
-                Text(
-                    stringResource(R.string.test_paragraph1),
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(vertical = 5.dp)
-                )
-                Text(
-                    stringResource(R.string.test_paragraph2),
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(vertical = 5.dp)
-                )
-                Text(
-                    stringResource(R.string.test_paragraph3),
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(vertical = 5.dp)
-                )
+                for(paragraph in viewModel.paragraphs.observeAsState(listOf()).value){
+                    Text(
+                        text = paragraph.text,
+                        fontSize = 16.sp,
+                        modifier = Modifier
+                            .padding(vertical = 5.dp)
+                            .onGloballyPositioned { coordinates ->
+                                paragraphPositions[paragraph] = coordinates
+                                    .positionInParent().y.toInt()
+                            }
+                    )
+                }
+
                 Spacer(Modifier.height(20.dp))
             }
         }
@@ -89,10 +100,15 @@ fun TitleParagraphTaskScreen(){
                     .verticalScroll(rememberScrollState())
             ) {
                 Spacer(Modifier.height(15.dp))
-                repeat(10){
-
-                    ParagraphTitleMapItem("A", "1")
-
+                for(paragraph in viewModel.paragraphs.observeAsState(listOf()).value)
+                {
+                    ParagraphTitleMapItem(paragraph.letter, ""){
+                        scope.launch {
+                            paragraphPositions[paragraph]?.let { pos ->
+                                scrollState.animateScrollTo(pos)
+                            }
+                        }
+                    }
                 }
                 Spacer(Modifier.height(15.dp))
             }
@@ -103,9 +119,18 @@ fun TitleParagraphTaskScreen(){
                     .verticalScroll(rememberScrollState())
             ){
                 Spacer(Modifier.height(15.dp))
-                repeat(10){
-                    Button({}) {
-                        Text("1. Sample Answer Option")
+                for (title in viewModel.titleBank.observeAsState(listOf()).value)
+                {
+                    Button(
+                        onClick = { viewModel.onTitleClick(title) },
+                        enabled = title.active,
+                        colors =
+                        if (title == viewModel.selectedTitle.observeAsState().value)
+                            ButtonDefaults.buttonColors(containerColor = Color.Cyan)
+                        else
+                            ButtonDefaults.buttonColors()
+                    ) {
+                        Text(title.title)
                     }
                 }
                 Spacer(Modifier.height(15.dp))
@@ -114,8 +139,15 @@ fun TitleParagraphTaskScreen(){
     }
 }
 
+//TODO : write viewmodel with ParagraphData class, use
+// objects of this class as key for button to find right paragraph text
+
 @Composable
-fun ParagraphTitleMapItem(paragraphLetter: String, titleNumber: String){
+fun ParagraphTitleMapItem(
+    paragraphLetter: String,
+    titleNumber: String,
+    onLetterClick: () -> Unit
+){
     Row(
         Modifier.fillMaxWidth()
             .padding(vertical = 5.dp)
@@ -126,7 +158,7 @@ fun ParagraphTitleMapItem(paragraphLetter: String, titleNumber: String){
             modifier = Modifier.size(35.dp),
             shape = CircleShape,
             contentPadding = PaddingValues(0.dp),
-            onClick = {}
+            onClick = onLetterClick
         ) {
             Text(paragraphLetter)
         }
