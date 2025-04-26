@@ -1,16 +1,13 @@
 package com.example.langlearnkt.viewmodels
 
 import android.content.Context
-import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat.getString
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.map
 import com.example.langlearnkt.R
-import com.example.langlearnkt.data.Lesson
-import com.example.langlearnkt.data.ParagraphData
-import com.example.langlearnkt.data.TitleParagraphTask
+import com.example.langlearnkt.data.entities.ParagraphData
+import com.example.langlearnkt.data.entities.TitleParagraphTask
 
 class TitleParagraphTaskViewModel(
     context: Context
@@ -30,7 +27,7 @@ class TitleParagraphTaskViewModel(
     val paragraphs : LiveData<List<ParagraphData>> =_paragraphs
 
     private val _titleBank = MutableLiveData<List<TitleBankItem>>(
-        task.paragraphs.shuffled().mapIndexed{ i, x-> TitleBankItem(x, i) }
+        task.paragraphs.shuffled().mapIndexed{ i, x-> TitleBankItem(x, i + 1) }
     )
     val titleBank: LiveData<List<TitleBankItem>> = _titleBank
 

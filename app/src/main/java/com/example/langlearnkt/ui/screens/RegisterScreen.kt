@@ -10,20 +10,23 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.langlearnkt.viewmodels.AuthRequestState
 import com.example.langlearnkt.viewmodels.RegisterScreenViewModel
 
 
 @Composable
-fun RegisterScreen(navController: NavController,
-                   viewModel: RegisterScreenViewModel = viewModel()){
+fun RegisterScreen(
+    navController: NavController,
+    viewModel: RegisterScreenViewModel = viewModel()
+){
     val email = viewModel.emailFieldText.observeAsState("")
     val password = viewModel.passwordFieldText.observeAsState("")
     val waitForRequest = viewModel.waitForRequest.observeAsState(false)
-    val regSuccess = viewModel.regSuccess.observeAsState(RegisterScreenViewModel.RegRequestState.WAIT)
+    val regSuccess = viewModel.regSuccess.observeAsState(AuthRequestState.WAIT)
     Column {
         TextField(
             value = email.value,
-            onValueChange = {viewModel.updateRegisterFieldValue(it)},
+            onValueChange = {viewModel.updateEmailFieldValue(it)},
             label = { Text("email") }
         )
         TextField(
@@ -43,12 +46,12 @@ fun RegisterScreen(navController: NavController,
             }
         }
         when(regSuccess.value){
-            RegisterScreenViewModel.RegRequestState.SUCCESS ->
+            AuthRequestState.SUCCESS ->
                 Text(
                 "Регистрация успешна",
                     color = Color.Green
                 )
-            RegisterScreenViewModel.RegRequestState.FAILURE ->
+            AuthRequestState.FAILURE ->
                 Text(
                     "Ошибка регистрации",
                     color = Color.Red

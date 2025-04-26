@@ -3,8 +3,8 @@ package com.example.langlearnkt.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.langlearnkt.data.Lesson
-import com.example.langlearnkt.data.OrderTask
+import com.example.langlearnkt.data.entities.Lesson
+import com.example.langlearnkt.data.entities.OrderTask
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

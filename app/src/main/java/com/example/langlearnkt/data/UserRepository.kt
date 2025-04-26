@@ -18,4 +18,13 @@ class UserRepository {
             false
         }
     }
+
+    suspend fun loginUserWithEmail(email: String, password: String): Boolean{
+        return try {
+            Firebase.auth.signInWithEmailAndPassword(email, password).await()
+            true
+        }catch (e: Exception){
+            false
+        }
+    }
 }

@@ -1,4 +1,4 @@
-package com.example.langlearnkt.data
+package com.example.langlearnkt.data.entities
 
 data class TitleParagraphTask(
     val paragraphs: List<ParagraphData>

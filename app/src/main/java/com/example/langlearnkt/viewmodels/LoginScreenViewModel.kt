@@ -3,15 +3,15 @@ package com.example.langlearnkt.viewmodels
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
-class RegisterScreenViewModel: AuthViewModel() {
+class LoginScreenViewModel: AuthViewModel() {
 
-    fun registerUserWithEmail(email: String, password: String){
+    fun loginUserWithEmail(email: String, password: String){
         if(_waitForRequest.value!!){
-           return
+            return
         }
         _waitForRequest.value = true
         viewModelScope.launch {
-            val success = userRepository.registerUserWithEmail(email, password)
+            val success = userRepository.loginUserWithEmail(email, password)
             _waitForRequest.postValue(false)
             if (success){
                 _regSuccess.postValue(AuthRequestState.SUCCESS)
@@ -20,5 +20,6 @@ class RegisterScreenViewModel: AuthViewModel() {
                 _regSuccess.postValue(AuthRequestState.FAILURE)
             }
         }
+
     }
 }
