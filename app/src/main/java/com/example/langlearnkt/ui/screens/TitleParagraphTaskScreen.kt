@@ -35,13 +35,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.langlearnkt.data.entities.ParagraphData
 import com.example.langlearnkt.viewmodels.TitleParagraphTaskViewModel
 import kotlinx.coroutines.launch
 
-@Preview(showBackground = true)
 @Composable
-fun TitleParagraphTaskScreen(viewModel: TitleParagraphTaskViewModel = viewModel()){
+fun TitleParagraphTaskScreen(navController: NavController, viewModel: TitleParagraphTaskViewModel){
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
     val paragraphPositions = remember { mutableMapOf<ParagraphData, Int>() }

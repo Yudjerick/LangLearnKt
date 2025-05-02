@@ -3,7 +3,6 @@ package com.example.langlearnkt.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.langlearnkt.data.entities.Lesson
 import com.example.langlearnkt.data.entities.OrderTask
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,23 +10,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class OrderTaskViewModel(
-    var lesson: Lesson
+    val task: OrderTask
 ): ViewModel() {
-    var currentTaskIndex: Int = 0
-        set(value){
-            field = value
-            orderTask = lesson.orderTasks[value]
-        }
-    var orderTask = lesson.orderTasks[currentTaskIndex]
-        set(value){
-            field = value
-            _wordBank.value = getBankFromTask(value)
-        }
 
     private val _givenAnswer = MutableStateFlow(listOf<AnswerWord>())
     val givenAnswer: StateFlow<List<AnswerWord>> = _givenAnswer.asStateFlow()
 
-    private val _wordBank = MutableStateFlow(getBankFromTask(orderTask))
+    private val _wordBank = MutableStateFlow(getBankFromTask(task))
     val wordBank: StateFlow<List<BankWord>> = _wordBank.asStateFlow()
 
     private val _taskStatus = MutableLiveData<TaskStatus>(TaskStatus.Unchecked)
@@ -49,21 +38,12 @@ class OrderTaskViewModel(
         }
     }
 
-    fun checkAnswer(){
-        if(_givenAnswer.value.map { it.bankWord.content } == orderTask.answer){
+    fun checkAnswer() {
+        if (_givenAnswer.value.map { it.bankWord.content } == task.answer) {
             _taskStatus.value = TaskStatus.Right
-        }
-        else{
+        } else {
             _taskStatus.value = TaskStatus.Wrong
         }
-    }
-
-    fun nextTask(){
-        if(currentTaskIndex < lesson.orderTasks.count() - 1){
-
-            currentTaskIndex++
-        }
-
     }
 
     private fun getBankFromTask( task: OrderTask): List<BankWord> {

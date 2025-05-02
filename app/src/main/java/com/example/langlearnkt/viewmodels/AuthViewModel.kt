@@ -3,7 +3,7 @@ package com.example.langlearnkt.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.langlearnkt.data.UserRepository
+import com.example.langlearnkt.data.repositories.UserRepository
 
 abstract class AuthViewModel: ViewModel()
 {

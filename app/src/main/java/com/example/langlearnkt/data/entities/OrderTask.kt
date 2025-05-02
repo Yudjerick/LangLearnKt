@@ -6,6 +6,4 @@ data class OrderTask(
     val text: String,
     val answer: List<String>,
     val additionalVariants: List<String>
-) {
-
-}
+) : Task()

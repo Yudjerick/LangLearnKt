@@ -10,18 +10,8 @@ import com.example.langlearnkt.data.entities.ParagraphData
 import com.example.langlearnkt.data.entities.TitleParagraphTask
 
 class TitleParagraphTaskViewModel(
-    context: Context
+    val task: TitleParagraphTask
 ): ViewModel() {
-    var task: TitleParagraphTask = TitleParagraphTask(
-        listOf(
-            ParagraphData(getString(context, R.string.test_paragraph1),"A", "Title 1"),
-            ParagraphData(getString(context, R.string.test_paragraph2),"B", "Title 2"),
-            ParagraphData(getString(context, R.string.test_paragraph3),"C", "Title 3"),
-            ParagraphData(getString(context, R.string.test_paragraph1),"D", "Title 4"),
-            ParagraphData(getString(context, R.string.test_paragraph2),"E", "Title 5"),
-            ParagraphData(getString(context, R.string.test_paragraph3),"F", "Title 6")
-        )
-    )
 
     private val _paragraphs = MutableLiveData<List<ParagraphData>>(task.paragraphs)
     val paragraphs : LiveData<List<ParagraphData>> =_paragraphs
