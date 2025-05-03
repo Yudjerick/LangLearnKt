@@ -4,7 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,6 +20,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ModalBottomSheet
@@ -32,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -48,9 +52,8 @@ fun LessonScreen(navController: NavController, viewModel: LessonViewModel = view
     val currentTaskIdx = viewModel.currentTaskIdx.observeAsState(0).value
     val currentTask = viewModel.lesson.tasks[currentTaskIdx]
     val taskStatus = viewModel.taskStatus.observeAsState(LessonViewModel.TaskStatus.Unchecked)
-    val sheetState = rememberModalBottomSheetState()
-    var taskViewModel: TaskViewModel? = null
-    Column {
+    val taskViewModel = viewModel.taskViewModel
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -62,24 +65,24 @@ fun LessonScreen(navController: NavController, viewModel: LessonViewModel = view
                 modifier = Modifier.padding(horizontal = 10.dp)
             )
         }
-        when(currentTask){
-            is OrderTask -> {
-                taskViewModel = OrderTaskViewModel(currentTask)
-                OrderTaskScreen(navController, taskViewModel as OrderTaskViewModel)
-            }
-            is TitleParagraphTask -> {
-                taskViewModel = TitleParagraphTaskViewModel(currentTask)
-                TitleParagraphTaskScreen(navController, taskViewModel as TitleParagraphTaskViewModel)
+        HorizontalDivider(thickness = 2.dp, color = Color.LightGray)
+        Box(Modifier.weight(1f)){
+            when(currentTask){
+                is OrderTask -> {
+                    OrderTaskScreen(navController, taskViewModel as OrderTaskViewModel)
+                }
+                is TitleParagraphTask -> {
+                    TitleParagraphTaskScreen(navController, taskViewModel as TitleParagraphTaskViewModel)
+                }
             }
         }
-
-        if(taskViewModel!=null){
-            Button(
-                onClick = { viewModel.setTaskStatus(if (taskViewModel!!.checkAnswer())
-                    LessonViewModel.TaskStatus.Right else LessonViewModel.TaskStatus.Wrong)}
-            ) {
-                Text("Проверить")
-            }
+        HorizontalDivider(thickness = 2.dp, color = Color.LightGray)
+        Button(
+            onClick = { viewModel.setTaskStatus(if (taskViewModel.checkAnswer())
+                LessonViewModel.TaskStatus.Right else LessonViewModel.TaskStatus.Wrong)},
+            Modifier.padding(vertical = 10.dp)
+        ) {
+            Text("Проверить")
         }
 
         if(taskStatus.value != LessonViewModel.TaskStatus.Unchecked){
@@ -87,26 +90,37 @@ fun LessonScreen(navController: NavController, viewModel: LessonViewModel = view
                 onDismissRequest = {viewModel.nextTask()},
             )
             {
-                when(taskStatus.value){
-                    LessonViewModel.TaskStatus.Right ->
-                        Text(
-                            text = "Верно",
-                            color = Color.Green
-                        )
-                    LessonViewModel.TaskStatus.Wrong ->
-                        Text(
-                            text = "Неверно",
-                            color = Color.Red
-                        )
-                    LessonViewModel.TaskStatus.Unchecked -> {}
-                }
-                Button(
-                    onClick = {
-                        viewModel.nextTask()
-                    }
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text("Далее")
+                    when(taskStatus.value){
+                        LessonViewModel.TaskStatus.Right ->
+                            Text(
+                                text = "Верно",
+                                color = Color.Green,
+                                fontSize = 20.sp,
+                            )
+                        LessonViewModel.TaskStatus.Wrong ->
+                            Text(
+                                text = "Неверно",
+                                color = Color.Red,
+                                fontSize = 20.sp,
+                            )
+                        LessonViewModel.TaskStatus.Unchecked -> {}
+                    }
+                    Spacer(Modifier.height(10.dp))
+                    Button(
+                        onClick = {
+                            viewModel.nextTask()
+                        },
+                        contentPadding = PaddingValues(horizontal = 50.dp)
+                    ) {
+                        Text("Далее")
+                    }
+                    Spacer(Modifier.height(60.dp))
                 }
+
             }
         }
 

@@ -4,6 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.langlearnkt.data.entities.Lesson
+import com.example.langlearnkt.data.entities.OrderTask
+import com.example.langlearnkt.data.entities.Task
+import com.example.langlearnkt.data.entities.TitleParagraphTask
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class LessonViewModel(
@@ -14,18 +17,26 @@ class LessonViewModel(
     private val _taskStatus = MutableLiveData<TaskStatus>(TaskStatus.Unchecked)
     val taskStatus: LiveData<TaskStatus> = _taskStatus
 
-    private val _showBottomSheet = MutableLiveData<Boolean>(false)
-    val showBottomSheet: LiveData<Boolean> = _showBottomSheet
+    var taskViewModel: TaskViewModel = getTaskViewModel(lesson.tasks[currentTaskIdx.value!!])
 
     fun nextTask(){
         if(_currentTaskIdx.value!! < lesson.tasks.count() - 1){
             _currentTaskIdx.value = _currentTaskIdx.value!! + 1
+            taskViewModel = getTaskViewModel(lesson.tasks[currentTaskIdx.value!!])
             setTaskStatus(TaskStatus.Unchecked)
+
         }
     }
 
     fun setTaskStatus(status: TaskStatus){
         _taskStatus.value = status
+    }
+
+    private fun getTaskViewModel(task: Task): TaskViewModel{
+        when(task){
+            is OrderTask -> return OrderTaskViewModel(task)
+            is TitleParagraphTask -> return TitleParagraphTaskViewModel(task)
+        }
     }
 
     enum class TaskStatus{

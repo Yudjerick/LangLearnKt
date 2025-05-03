@@ -45,7 +45,7 @@ fun TitleParagraphTaskScreen(navController: NavController, viewModel: TitleParag
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
     val paragraphPositions = remember { mutableMapOf<ParagraphData, Int>() }
-    Column {
+    Column(Modifier.fillMaxHeight()) {
         Box(
             Modifier.fillMaxHeight(0.6f).padding(horizontal = 15.dp)
         ) {
