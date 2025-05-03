@@ -15,10 +15,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -34,12 +39,17 @@ import com.example.langlearnkt.data.entities.OrderTask
 import com.example.langlearnkt.data.entities.TitleParagraphTask
 import com.example.langlearnkt.viewmodels.LessonViewModel
 import com.example.langlearnkt.viewmodels.OrderTaskViewModel
+import com.example.langlearnkt.viewmodels.TaskViewModel
 import com.example.langlearnkt.viewmodels.TitleParagraphTaskViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LessonScreen(navController: NavController, viewModel: LessonViewModel = viewModel()){
     val currentTaskIdx = viewModel.currentTaskIdx.observeAsState(0).value
     val currentTask = viewModel.lesson.tasks[currentTaskIdx]
+    val taskStatus = viewModel.taskStatus.observeAsState(LessonViewModel.TaskStatus.Unchecked)
+    val sheetState = rememberModalBottomSheetState()
+    var taskViewModel: TaskViewModel? = null
     Column {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -53,14 +63,53 @@ fun LessonScreen(navController: NavController, viewModel: LessonViewModel = view
             )
         }
         when(currentTask){
-            is OrderTask -> OrderTaskScreen(navController, OrderTaskViewModel(currentTask))
-            is TitleParagraphTask -> TitleParagraphTaskScreen(navController, TitleParagraphTaskViewModel(currentTask))
+            is OrderTask -> {
+                taskViewModel = OrderTaskViewModel(currentTask)
+                OrderTaskScreen(navController, taskViewModel as OrderTaskViewModel)
+            }
+            is TitleParagraphTask -> {
+                taskViewModel = TitleParagraphTaskViewModel(currentTask)
+                TitleParagraphTaskScreen(navController, taskViewModel as TitleParagraphTaskViewModel)
+            }
         }
-        Button(
-            onClick = { viewModel.nextTask() }
-        ) {
-            Text("Далее")
+
+        if(taskViewModel!=null){
+            Button(
+                onClick = { viewModel.setTaskStatus(if (taskViewModel!!.checkAnswer())
+                    LessonViewModel.TaskStatus.Right else LessonViewModel.TaskStatus.Wrong)}
+            ) {
+                Text("Проверить")
+            }
         }
+
+        if(taskStatus.value != LessonViewModel.TaskStatus.Unchecked){
+            ModalBottomSheet(
+                onDismissRequest = {viewModel.nextTask()},
+            )
+            {
+                when(taskStatus.value){
+                    LessonViewModel.TaskStatus.Right ->
+                        Text(
+                            text = "Верно",
+                            color = Color.Green
+                        )
+                    LessonViewModel.TaskStatus.Wrong ->
+                        Text(
+                            text = "Неверно",
+                            color = Color.Red
+                        )
+                    LessonViewModel.TaskStatus.Unchecked -> {}
+                }
+                Button(
+                    onClick = {
+                        viewModel.nextTask()
+                    }
+                ) {
+                    Text("Далее")
+                }
+            }
+        }
+
     }
 }
 

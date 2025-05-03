@@ -22,7 +22,6 @@ import com.example.langlearnkt.viewmodels.OrderTaskViewModel
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun OrderTaskScreen(navController: NavController, viewModel: OrderTaskViewModel){
-    val taskStatus = viewModel.taskStatus.observeAsState(OrderTaskViewModel.TaskStatus.Unchecked)
     Column {
         FlowRow(
             modifier = Modifier
@@ -56,18 +55,6 @@ fun OrderTaskScreen(navController: NavController, viewModel: OrderTaskViewModel)
         {
             Text("Проверить")
         }
-        when(taskStatus.value){
-            OrderTaskViewModel.TaskStatus.Right ->
-                Text(
-                    text = "Верно",
-                    color = Color.Green
-                )
-            OrderTaskViewModel.TaskStatus.Wrong ->
-                Text(
-                    text = "Неверно",
-                    color = Color.Red
-                )
-            OrderTaskViewModel.TaskStatus.Unchecked -> {}
-        }
+
     }
 }

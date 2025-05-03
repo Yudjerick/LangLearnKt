@@ -11,7 +11,7 @@ import com.example.langlearnkt.data.entities.TitleParagraphTask
 
 class TitleParagraphTaskViewModel(
     val task: TitleParagraphTask
-): ViewModel() {
+): TaskViewModel() {
 
     private val _paragraphs = MutableLiveData<List<ParagraphData>>(task.paragraphs)
     val paragraphs : LiveData<List<ParagraphData>> =_paragraphs
@@ -106,6 +106,15 @@ class TitleParagraphTaskViewModel(
         val number: Int?,
         val numberParagraph: ParagraphData? = null
     )
+
+    override fun checkAnswer(): Boolean {
+        for (map in _titleParagraphMaps.value!!){
+            if(map.numberParagraph != map.letterParagraph){
+                return false
+            }
+        }
+        return true
+    }
 
 }
 
