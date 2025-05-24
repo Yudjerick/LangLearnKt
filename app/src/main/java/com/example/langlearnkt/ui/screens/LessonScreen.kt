@@ -1,5 +1,7 @@
 package com.example.langlearnkt.ui.screens
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -28,6 +30,8 @@ import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
@@ -36,23 +40,35 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.langlearnkt.data.entities.OrderTask
 import com.example.langlearnkt.data.entities.TitleParagraphTask
+import com.example.langlearnkt.ui.screenPathes
 import com.example.langlearnkt.viewmodels.LessonViewModel
 import com.example.langlearnkt.viewmodels.OrderTaskViewModel
 import com.example.langlearnkt.viewmodels.TaskViewModel
 import com.example.langlearnkt.viewmodels.TitleParagraphTaskViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LessonScreen(navController: NavController, viewModel: LessonViewModel = viewModel()){
+
+
     val currentTaskIdx = viewModel.currentTaskIdx.observeAsState(0).value
     val currentTask = viewModel.lesson.tasks[currentTaskIdx]
     val taskStatus = viewModel.taskStatus.observeAsState(LessonViewModel.TaskStatus.Unchecked)
     val taskViewModel = viewModel.taskViewModel
+
+
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -123,6 +139,13 @@ fun LessonScreen(navController: NavController, viewModel: LessonViewModel = view
 
             }
         }
+
+    }
+    LaunchedEffect(Unit) {
+        viewModel.finishedEvent.collectLatest {
+            navController.navigate(screenPathes.lessonFinished)
+        }
+         // Проверяем без ViewModel
 
     }
 }

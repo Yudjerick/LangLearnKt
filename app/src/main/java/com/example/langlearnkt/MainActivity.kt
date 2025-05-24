@@ -16,6 +16,7 @@ import com.example.langlearnkt.ui.screens.RegisterScreen
 import com.example.langlearnkt.ui.screens.TitleParagraphTaskScreen
 import com.example.langlearnkt.ui.screenPathes
 import com.example.langlearnkt.ui.screens.CampaignMenuScreen
+import com.example.langlearnkt.ui.screens.LessonFinishedScreen
 import com.example.langlearnkt.ui.screens.LessonScreen
 import com.example.langlearnkt.viewmodels.LessonViewModel
 import com.example.langlearnkt.viewmodels.TitleParagraphTaskViewModel
@@ -43,6 +44,9 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             NavHost(
                 navController = navController, startDestination = startScreenPath, builder = {
+                    composable(screenPathes.lessonFinished) {
+                        LessonFinishedScreen(navController)
+                    }
                     composable(screenPathes.login) {
                         LoginScreen(navController)
                     }
@@ -53,8 +57,9 @@ class MainActivity : ComponentActivity() {
                         CampaignMenuScreen(navController)
                     }
                     composable(screenPathes.lesson) {
-                        LessonScreen(navController, LessonViewModel(lesson1))
+                        LessonScreen(navController)
                     }
+
             })
         }
     }

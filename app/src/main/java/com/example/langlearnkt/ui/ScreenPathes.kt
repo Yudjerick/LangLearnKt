@@ -5,4 +5,5 @@ object screenPathes {
     val register = "Register"
     val lesson = "Lesson"
     val campaignMenu = "CampaignMenu"
+    val lessonFinished = "LessonFinished"
 }

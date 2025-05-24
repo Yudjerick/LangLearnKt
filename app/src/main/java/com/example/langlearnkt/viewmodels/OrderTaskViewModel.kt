@@ -20,8 +20,6 @@ class OrderTaskViewModel(
     private val _wordBank = MutableStateFlow(getBankFromTask(task))
     val wordBank: StateFlow<List<BankWord>> = _wordBank.asStateFlow()
 
-
-
     fun addWordToAnswer(word: BankWord){
         _givenAnswer.value += AnswerWord(word)
         val updatedBankWord = word.copy(buttonActive = false)

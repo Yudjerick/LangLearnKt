@@ -3,15 +3,20 @@ package com.example.langlearnkt.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.langlearnkt.data.entities.Lesson
 import com.example.langlearnkt.data.entities.OrderTask
 import com.example.langlearnkt.data.entities.Task
 import com.example.langlearnkt.data.entities.TitleParagraphTask
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.example.langlearnkt.data.lesson1
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 
-class LessonViewModel(
-    val lesson: Lesson
-) : ViewModel() {
+class LessonViewModel() : ViewModel() {
+    val lesson = lesson1
     private val _currentTaskIdx = MutableLiveData<Int>(0)
     val currentTaskIdx: LiveData<Int> = _currentTaskIdx
     private val _taskStatus = MutableLiveData<TaskStatus>(TaskStatus.Unchecked)
@@ -19,13 +24,25 @@ class LessonViewModel(
 
     var taskViewModel: TaskViewModel = getTaskViewModel(lesson.tasks[currentTaskIdx.value!!])
 
+    private val _finishedEvent = MutableSharedFlow<Boolean>()
+    val finishedEvent = _finishedEvent.asSharedFlow()
+
     fun nextTask(){
         if(_currentTaskIdx.value!! < lesson.tasks.count() - 1){
             _currentTaskIdx.value = _currentTaskIdx.value!! + 1
             taskViewModel = getTaskViewModel(lesson.tasks[currentTaskIdx.value!!])
             setTaskStatus(TaskStatus.Unchecked)
-
         }
+        else{
+            finishLesson()
+        }
+    }
+
+    fun finishLesson(){
+        viewModelScope.launch {
+            _finishedEvent.emit(true)
+        }
+
     }
 
     fun setTaskStatus(status: TaskStatus){
