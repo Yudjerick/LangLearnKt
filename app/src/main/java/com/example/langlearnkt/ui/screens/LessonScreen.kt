@@ -64,7 +64,7 @@ fun LessonScreen(navController: NavController, viewModel: LessonViewModel = view
 
 
     val currentTaskIdx = viewModel.currentTaskIdx.observeAsState(0).value
-    val currentTask = viewModel.lesson.tasks[currentTaskIdx]
+    val currentTask = viewModel.lesson.content.tasks[currentTaskIdx]
     val taskStatus = viewModel.taskStatus.observeAsState(LessonViewModel.TaskStatus.Unchecked)
     val taskViewModel = viewModel.taskViewModel
 
@@ -75,7 +75,7 @@ fun LessonScreen(navController: NavController, viewModel: LessonViewModel = view
         ) {
             TransparentCloseButton({})
             RoundedProgressBar(
-                (currentTaskIdx.toFloat() / viewModel.lesson.tasks.count().toFloat()),
+                (currentTaskIdx.toFloat() / viewModel.lesson.content.tasks.count().toFloat()),
                 Color.Green,
                 Color.Gray,
                 modifier = Modifier.padding(horizontal = 10.dp)
