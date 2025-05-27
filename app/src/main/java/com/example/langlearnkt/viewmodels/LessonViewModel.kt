@@ -10,6 +10,8 @@ import com.example.langlearnkt.data.entities.OrderTask
 import com.example.langlearnkt.data.entities.Task
 import com.example.langlearnkt.data.entities.TitleParagraphTask
 import com.example.langlearnkt.data.lesson1
+import com.example.langlearnkt.data.repositories.LessonRepository
+import com.example.langlearnkt.ui.lessonMetaDataToLoad
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -21,6 +23,8 @@ class LessonViewModel() : ViewModel() {
     val currentTaskIdx: LiveData<Int> = _currentTaskIdx
     private val _taskStatus = MutableLiveData<TaskStatus>(TaskStatus.Unchecked)
     val taskStatus: LiveData<TaskStatus> = _taskStatus
+    private val _isLoading = MutableLiveData<Boolean>(true)
+    val isLoading: LiveData<Boolean> = _isLoading
 
     var taskViewModel: TaskViewModel = getTaskViewModel(lesson.content.tasks[currentTaskIdx.value!!])
 
@@ -54,6 +58,19 @@ class LessonViewModel() : ViewModel() {
             is OrderTask -> return OrderTaskViewModel(task)
             is TitleParagraphTask -> return TitleParagraphTaskViewModel(task)
         }
+    }
+
+    fun loadLesson(){
+        viewModelScope.launch {
+            lessonMetaDataToLoad.metadata?.let {
+                lesson = LessonRepository().getLesson(it)!!
+                _currentTaskIdx.value = 0
+                taskViewModel = getTaskViewModel(lesson.content.tasks[currentTaskIdx.value!!])
+                setTaskStatus(TaskStatus.Unchecked)
+                _isLoading.value = false
+            }
+        }
+
     }
 
     enum class TaskStatus{

@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         Firebase.firestore
         lifecycleScope.launch {
-            LessonRepository().saveLesson(lesson1)
+            //LessonRepository().saveLesson(lesson1)
         }
 
         var startScreenPath = screenPathes.login

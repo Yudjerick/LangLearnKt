@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -62,11 +63,22 @@ import kotlinx.coroutines.withContext
 @Composable
 fun LessonScreen(navController: NavController, viewModel: LessonViewModel = viewModel()){
 
+    LaunchedEffect(Unit) { viewModel.loadLesson() }
+    LaunchedEffect(Unit) {
+        viewModel.finishedEvent.collectLatest {
+            navController.navigate(screenPathes.lessonFinished)
+        }
+    }
+    if(viewModel.isLoading.observeAsState().value!!){
+        CircularProgressIndicator()
+        return
+    }
 
     val currentTaskIdx = viewModel.currentTaskIdx.observeAsState(0).value
     val currentTask = viewModel.lesson.content.tasks[currentTaskIdx]
     val taskStatus = viewModel.taskStatus.observeAsState(LessonViewModel.TaskStatus.Unchecked)
     val taskViewModel = viewModel.taskViewModel
+
 
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -141,13 +153,7 @@ fun LessonScreen(navController: NavController, viewModel: LessonViewModel = view
         }
 
     }
-    LaunchedEffect(Unit) {
-        viewModel.finishedEvent.collectLatest {
-            navController.navigate(screenPathes.lessonFinished)
-        }
-         // Проверяем без ViewModel
 
-    }
 }
 
 @Composable

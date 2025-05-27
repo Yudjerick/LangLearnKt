@@ -12,7 +12,7 @@ val lesson1 = Lesson(
     LessonContent(
         "",
         listOf(
-            OrderTask("","", listOf("we", "are", "the", "champions"), listOf("losers")),
+            OrderTask("","", listOf("AAAA", "BBBB", "CCC", "DDDD"), listOf("11111")),
             TitleParagraphTask(
                 listOf(
                     ParagraphData(
