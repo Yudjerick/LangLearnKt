@@ -3,6 +3,7 @@ package com.example.langlearnkt.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.example.langlearnkt.data.entities.LessonMetaData
 import com.example.langlearnkt.data.repositories.LessonRepository
@@ -28,11 +29,15 @@ class LessonsListViewModel: ViewModel() {
             val results = mutableListOf<Float?>()
             val resultRepository = LessonResultRepository()
             val userId = FirebaseAuth.getInstance().currentUser!!.uid
-            lessonItems.value!!.forEach { x ->
+            /*lessonItems.value!!.forEach { x ->
                 results.add(LessonResultRepository().getResult(userId, x.metaData.id!!))
+            }*/
+            lessonItems.value!!.forEach{ x ->
+                _lessonItems.value = _lessonItems.value!!.map{ item ->
+                    if(x != item) item
+                    else LessonListItem(item.metaData, resultRepository.getResult(userId, x.metaData.id!!))
+                }
             }
-            _lessonItems.value = _lessonItems.value!!.mapIndexed { index, lessonListItem ->
-                LessonListItem(lessonListItem.metaData, results[index]) }
         }
     }
     data class LessonListItem(

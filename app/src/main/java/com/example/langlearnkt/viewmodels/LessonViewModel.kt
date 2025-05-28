@@ -48,12 +48,12 @@ class LessonViewModel() : ViewModel() {
     }
 
     fun finishLesson(){
-        LessonResultRepository().saveResult(
-            FirebaseAuth.getInstance().currentUser!!.uid,
-            lesson.metaData.id!!,
-            tasksResults.count { x -> x == 1f } / tasksResults.size.toFloat()
-        )
         viewModelScope.launch {
+            LessonResultRepository().saveResult(
+                FirebaseAuth.getInstance().currentUser!!.uid,
+                lesson.metaData.id!!,
+                tasksResults.count { x -> x == 1f } / tasksResults.size.toFloat()
+            )
             _finishedEvent.emit(true)
         }
 

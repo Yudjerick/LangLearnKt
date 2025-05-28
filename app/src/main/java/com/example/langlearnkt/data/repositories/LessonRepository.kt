@@ -5,9 +5,9 @@ import com.example.langlearnkt.data.converters.FirestoreConverter
 import com.example.langlearnkt.data.entities.Lesson
 import com.example.langlearnkt.data.entities.LessonContent
 import com.example.langlearnkt.data.entities.LessonMetaData
+import com.example.langlearnkt.data.entities.RoomLesson
 import com.example.langlearnkt.data.localcache.AppDatabase
 import com.example.langlearnkt.data.localcache.Dao
-import com.example.langlearnkt.data.localcache.RoomLesson
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.toObject
@@ -90,6 +90,7 @@ class LessonRepository(){
     }
 
     private suspend fun saveLessonInCache(lesson: Lesson){
+
         AppDatabase.instance.dao().insertLesson(RoomLesson.toRoomLesson(lesson))
     }
 }

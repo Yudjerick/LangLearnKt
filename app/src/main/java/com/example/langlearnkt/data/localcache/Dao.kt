@@ -3,6 +3,7 @@ package com.example.langlearnkt.data.localcache
 import androidx.room.Dao
 import androidx.room.Entity
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.TypeConverters
@@ -10,6 +11,8 @@ import com.example.langlearnkt.data.converters.RoomTypeConverters
 import com.example.langlearnkt.data.entities.Lesson
 import com.example.langlearnkt.data.entities.LessonContent
 import com.example.langlearnkt.data.entities.LessonMetaData
+import com.example.langlearnkt.data.entities.LessonResult
+import com.example.langlearnkt.data.entities.RoomLesson
 import com.example.langlearnkt.data.entities.Task
 
 @Dao
@@ -19,45 +22,11 @@ interface Dao {
 
     @Insert
     suspend fun insertLesson(lesson: RoomLesson)
+
+    @Query("SELECT * FROM lesson_result WHERE lessonId = :lessonId AND userId = :userId LIMIT 1")
+    suspend fun getLessonResult(lessonId: String, userId: String): LessonResult?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertLessonResult(lessonResult: LessonResult)
 }
 
-@Entity(tableName = "lesson")
-data class RoomLesson(
-    @PrimaryKey
-    val id: String,
-    val title: String?,
-    val description: String?,
-    @TypeConverters(*[RoomTypeConverters::class])
-    val tasks: List<Task>?
-){
-    companion object{
-        fun toRoomLesson(lesson: Lesson):RoomLesson{
-            return RoomLesson(
-                lesson.metaData.id!!,
-                lesson.metaData.title,
-                lesson.metaData.description,
-                lesson.content.tasks
-            )
-        }
-
-        fun toLesson(roomLesson: RoomLesson?): Lesson?{
-
-            if (roomLesson != null) {
-                return Lesson(
-                    LessonMetaData(
-                        roomLesson.id,
-                        roomLesson.title,
-                        roomLesson.description
-                    ),
-                    LessonContent(
-                        roomLesson.id,
-                        roomLesson.tasks!!
-                    )
-                )
-            }
-            else{
-                return null
-            }
-        }
-    }
-}
