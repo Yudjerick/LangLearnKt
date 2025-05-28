@@ -1,22 +1,18 @@
 package com.example.langlearnkt.ui.screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
@@ -26,18 +22,15 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.langlearnkt.R
 import com.example.langlearnkt.data.entities.LessonMetaData
+import com.example.langlearnkt.data.lesson1
 import com.example.langlearnkt.ui.lessonMetaDataToLoad
 import com.example.langlearnkt.ui.screenPathes
 import com.example.langlearnkt.viewmodels.LessonsListViewModel
@@ -48,7 +41,7 @@ fun LessonsListScreen(
     navController: NavController,
     viewModel: LessonsListViewModel = viewModel()
 ){
-    val lessonsMetadata = viewModel.lessonsMetaData.observeAsState(emptyList())
+    val lessonsData = viewModel.lessonItems.observeAsState(emptyList())
     val isLoading = viewModel.isLoading.observeAsState(false)
 
     LaunchedEffect(Unit) {
@@ -62,12 +55,12 @@ fun LessonsListScreen(
             TransparentCloseButton({})
         }
         HorizontalDivider(thickness = 2.dp, color = Color.LightGray)
-        if(lessonsMetadata.value.isEmpty()){
+        if(lessonsData.value.isEmpty()){
             CircularProgressIndicator()
         }
         else {
             LazyColumn {
-                items(lessonsMetadata.value) { metaData ->
+                items(lessonsData.value) { metaData ->
                     LessonListItem(metaData, navController)
                 }
             }
@@ -76,7 +69,8 @@ fun LessonsListScreen(
 }
 
 @Composable
-fun LessonListItem(metadata: LessonMetaData, navController: NavController){
+fun LessonListItem(data: LessonsListViewModel.LessonListItem, navController: NavController){
+    val metadata = data.metaData
     Row(
         modifier = Modifier
         .padding(horizontal = 15.dp, vertical = 0.dp)
@@ -88,25 +82,27 @@ fun LessonListItem(metadata: LessonMetaData, navController: NavController){
     ) {
         Box(
             modifier = Modifier
-                .weight(2f)  // Занимаем всю доступную высоту
-                .aspectRatio(1f)  // Сохраняем квадратную форму (опционально)
+                .weight(2f)
+                .aspectRatio(1f)
         ) {
             Image(
-                painter = painterResource(R.drawable.roadmap_level_current),  // Используем painterResource вместо ImageBitmap
+                painter =
+                    if(data.result == null) painterResource(R.drawable.roadmap_level_current)
+                    else painterResource(R.drawable.roadmap_level_done),
                 contentDescription = "lesson icon",
-                contentScale = ContentScale.FillBounds,  // или ContentScale.FillBounds
-                modifier = Modifier.fillMaxSize()  // Занимаем весь доступный Box
+                contentScale = ContentScale.FillHeight,
+                modifier = Modifier.fillMaxSize()
             )
         }
         Column(
-            modifier = Modifier.weight(6f)  // Занимаем оставшееся пространство
+            modifier = Modifier.weight(7f)
         ){
-            Spacer(Modifier.height(10.dp))
+            Spacer(Modifier.height(5.dp))
             metadata.title?.let {
                 Text(
                     text = it,
                     fontSize = 20.sp,
-                    modifier = Modifier.padding(horizontal = 15.dp, vertical = 5.dp),
+                    modifier = Modifier.padding(horizontal = 15.dp, vertical = 3.dp),
                     color = Color.Gray
                 )
             }
@@ -114,11 +110,14 @@ fun LessonListItem(metadata: LessonMetaData, navController: NavController){
                 Text(
                     text = it,
                     fontSize = 14.sp,
-                    modifier = Modifier.padding(horizontal = 15.dp, vertical = 5.dp),
+                    modifier = Modifier.padding(horizontal = 15.dp, vertical = 3.dp),
                     color = Color.LightGray
                 )
             }
-            Spacer(Modifier.height(10.dp))
+            if(data.result!= null) {
+                Text(data.result.toString())
+            }
+            Spacer(Modifier.height(5.dp))
         }
     }
 

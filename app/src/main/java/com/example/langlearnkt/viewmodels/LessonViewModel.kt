@@ -4,16 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.langlearnkt.data.entities.Lesson
 import com.example.langlearnkt.data.entities.OrderTask
 import com.example.langlearnkt.data.entities.Task
 import com.example.langlearnkt.data.entities.TitleParagraphTask
 import com.example.langlearnkt.data.lesson1
 import com.example.langlearnkt.data.repositories.LessonRepository
+import com.example.langlearnkt.data.repositories.LessonResultRepository
 import com.example.langlearnkt.ui.lessonMetaDataToLoad
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
@@ -26,15 +26,20 @@ class LessonViewModel() : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>(true)
     val isLoading: LiveData<Boolean> = _isLoading
 
-    var taskViewModel: TaskViewModel = getTaskViewModel(lesson.content.tasks[currentTaskIdx.value!!])
+    var taskViewState: TaskViewState = getTaskViewModel(lesson.content.tasks[currentTaskIdx.value!!])
 
     private val _finishedEvent = MutableSharedFlow<Boolean>()
     val finishedEvent = _finishedEvent.asSharedFlow()
 
+    var tasksResults = MutableList<Float?>(
+        lesson.content.tasks.size,
+        init = { _ -> null},
+    )
+
     fun nextTask(){
         if(_currentTaskIdx.value!! < lesson.content.tasks.count() - 1){
             _currentTaskIdx.value = _currentTaskIdx.value!! + 1
-            taskViewModel = getTaskViewModel(lesson.content.tasks[currentTaskIdx.value!!])
+            taskViewState = getTaskViewModel(lesson.content.tasks[currentTaskIdx.value!!])
             setTaskStatus(TaskStatus.Unchecked)
         }
         else{
@@ -43,6 +48,11 @@ class LessonViewModel() : ViewModel() {
     }
 
     fun finishLesson(){
+        LessonResultRepository().saveResult(
+            FirebaseAuth.getInstance().currentUser!!.uid,
+            lesson.metaData.id!!,
+            tasksResults.count { x -> x == 1f } / tasksResults.size.toFloat()
+        )
         viewModelScope.launch {
             _finishedEvent.emit(true)
         }
@@ -53,10 +63,16 @@ class LessonViewModel() : ViewModel() {
         _taskStatus.value = status
     }
 
-    private fun getTaskViewModel(task: Task): TaskViewModel{
+    fun checkAndSaveTaskResult(): Boolean{
+        var result = taskViewState.checkAnswer()
+        tasksResults[currentTaskIdx.value!!] = if(result) 1f else 0f
+        return result
+    }
+
+    private fun getTaskViewModel(task: Task): TaskViewState{
         when(task){
-            is OrderTask -> return OrderTaskViewModel(task)
-            is TitleParagraphTask -> return TitleParagraphTaskViewModel(task)
+            is OrderTask -> return OrderTaskViewState(task)
+            is TitleParagraphTask -> return TitleParagraphTaskViewState(task)
         }
     }
 
@@ -65,9 +81,13 @@ class LessonViewModel() : ViewModel() {
             lessonMetaDataToLoad.metadata?.let {
                 lesson = LessonRepository().getLesson(it)!!
                 _currentTaskIdx.value = 0
-                taskViewModel = getTaskViewModel(lesson.content.tasks[currentTaskIdx.value!!])
+                taskViewState = getTaskViewModel(lesson.content.tasks[currentTaskIdx.value!!])
                 setTaskStatus(TaskStatus.Unchecked)
                 _isLoading.value = false
+                tasksResults = MutableList<Float?>(
+                    lesson.content.tasks.size,
+                    init = { _ -> null},
+                )
             }
         }
 

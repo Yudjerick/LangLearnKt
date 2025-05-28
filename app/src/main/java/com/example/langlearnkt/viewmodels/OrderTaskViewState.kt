@@ -1,18 +1,14 @@
 package com.example.langlearnkt.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.langlearnkt.data.entities.OrderTask
-import com.example.langlearnkt.data.entities.Task
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class OrderTaskViewModel(
+class OrderTaskViewState(
     val task: OrderTask
-): TaskViewModel() {
+): TaskViewState() {
 
     private val _givenAnswer = MutableStateFlow(listOf<AnswerWord>())
     val givenAnswer: StateFlow<List<AnswerWord>> = _givenAnswer.asStateFlow()

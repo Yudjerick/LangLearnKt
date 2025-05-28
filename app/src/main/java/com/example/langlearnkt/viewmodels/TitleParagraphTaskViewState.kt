@@ -1,17 +1,13 @@
 package com.example.langlearnkt.viewmodels
 
-import android.content.Context
-import androidx.core.content.ContextCompat.getString
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.example.langlearnkt.R
 import com.example.langlearnkt.data.entities.ParagraphData
 import com.example.langlearnkt.data.entities.TitleParagraphTask
 
-class TitleParagraphTaskViewModel(
+class TitleParagraphTaskViewState(
     val task: TitleParagraphTask
-): TaskViewModel() {
+): TaskViewState() {
 
     private val _paragraphs = MutableLiveData<List<ParagraphData>>(task.paragraphs)
     val paragraphs : LiveData<List<ParagraphData>> =_paragraphs

@@ -31,17 +31,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.langlearnkt.data.entities.ParagraphData
-import com.example.langlearnkt.viewmodels.TitleParagraphTaskViewModel
+import com.example.langlearnkt.viewmodels.TitleParagraphTaskViewState
 import kotlinx.coroutines.launch
 
 @Composable
-fun TitleParagraphTaskScreen(navController: NavController, viewModel: TitleParagraphTaskViewModel){
+fun TitleParagraphTaskScreen(navController: NavController, viewModel: TitleParagraphTaskViewState){
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
     val paragraphPositions = remember { mutableMapOf<ParagraphData, Int>() }
@@ -131,8 +129,8 @@ fun TitleParagraphTaskScreen(navController: NavController, viewModel: TitleParag
 
 @Composable
 fun ParagraphTitleMapItem(
-    mapData: TitleParagraphTaskViewModel.TitleParagraphMap,
-    selectedMap: TitleParagraphTaskViewModel.TitleParagraphMap?,
+    mapData: TitleParagraphTaskViewState.TitleParagraphMap,
+    selectedMap: TitleParagraphTaskViewState.TitleParagraphMap?,
     onMapClick: () -> Unit,
     onLetterClick: () -> Unit
 ){

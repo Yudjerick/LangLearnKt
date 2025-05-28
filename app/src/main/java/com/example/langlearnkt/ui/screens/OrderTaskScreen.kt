@@ -15,18 +15,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.langlearnkt.viewmodels.OrderTaskViewModel
+import com.example.langlearnkt.viewmodels.OrderTaskViewState
 
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun OrderTaskScreen(navController: NavController, viewModel: OrderTaskViewModel){
+fun OrderTaskScreen(navController: NavController, viewModel: OrderTaskViewState){
     Column(
         modifier = Modifier
             .fillMaxHeight()

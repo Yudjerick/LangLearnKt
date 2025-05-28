@@ -1,7 +1,5 @@
 package com.example.langlearnkt.viewmodels
 
-import androidx.lifecycle.ViewModel
-
-abstract class TaskViewModel { 
+abstract class TaskViewState {
     abstract fun checkAnswer(): Boolean
 }
