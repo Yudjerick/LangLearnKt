@@ -1,11 +1,13 @@
 package com.example.langlearnkt.data.repositories
 
 import android.util.Log
-import com.example.langlearnkt.data.converters.Converter
+import com.example.langlearnkt.data.converters.FirestoreConverter
 import com.example.langlearnkt.data.entities.Lesson
 import com.example.langlearnkt.data.entities.LessonContent
 import com.example.langlearnkt.data.entities.LessonMetaData
-import com.google.firebase.firestore.DocumentSnapshot
+import com.example.langlearnkt.data.localcache.AppDatabase
+import com.example.langlearnkt.data.localcache.Dao
+import com.example.langlearnkt.data.localcache.RoomLesson
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.toObject
@@ -28,19 +30,31 @@ class LessonRepository(){
     }
 
     suspend fun getLesson(metaData: LessonMetaData): Lesson? {
+        try {
+            val cachedLesson = getLessonFromCache(metaData)
+            if (cachedLesson != null){
+                return cachedLesson
+            }
+        }
+        catch (e: Exception){
+            Log.e("AAA", e.message.toString() )
+        }
+
         return try {
             val contentDoc = FirebaseFirestore.getInstance()
                 .collection("lessons_content").document(metaData.id!!).get()
                 .await().data
             val tasks = contentDoc?.get("tasks") as? List<Map<String, Any>> ?: emptyList()
             val id = contentDoc?.get("id") as String
-            Lesson(
+            val result = Lesson(
                 metaData,
                 LessonContent(
                     id = id,
-                    tasks = tasks.mapNotNull { Converter().mapToTask(it) }
+                    tasks = tasks.mapNotNull { FirestoreConverter().mapToTask(it) }
                 )
             )
+            saveLessonInCache(result)
+            result
         }
         catch (e: Exception) {
             e.message?.let { Log.e("AAA", it) }
@@ -61,7 +75,7 @@ class LessonRepository(){
                     mapOf(
                         "id" to metaDoc.id,
                         "tasks" to lesson.content.tasks.map { task ->
-                            Converter().taskToMap(task)
+                            FirestoreConverter().taskToMap(task)
                         }
                     )
                 )
@@ -69,6 +83,14 @@ class LessonRepository(){
         } catch (e: Exception) {
             e.message?.let { Log.e("AAA", it) }
         }
+    }
+
+    private suspend fun getLessonFromCache(metaData: LessonMetaData): Lesson?{
+        return RoomLesson.toLesson(AppDatabase.instance.dao().getLesson(metaData.id!!))
+    }
+
+    private suspend fun saveLessonInCache(lesson: Lesson){
+        AppDatabase.instance.dao().insertLesson(RoomLesson.toRoomLesson(lesson))
     }
 }
 

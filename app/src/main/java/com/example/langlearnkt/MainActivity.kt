@@ -1,13 +1,17 @@
 package com.example.langlearnkt
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.room.Room
+import com.example.langlearnkt.data.converters.RoomTypeConverters
 import com.example.langlearnkt.data.lesson1
+import com.example.langlearnkt.data.localcache.AppDatabase
 import com.example.langlearnkt.data.repositories.LessonRepository
 import com.example.langlearnkt.ui.screens.LoginScreen
 import com.example.langlearnkt.ui.screens.RegisterScreen
@@ -30,9 +34,17 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Firebase.firestore
+
+        val db = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java, "db"
+        ).build()
+        AppDatabase.instance = db
+
         lifecycleScope.launch {
             //LessonRepository().saveLesson(lesson1)
         }
+        
 
         var startScreenPath = screenPathes.login
         var currentUser = Firebase.auth.currentUser

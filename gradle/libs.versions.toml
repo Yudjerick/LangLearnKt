@@ -11,6 +11,7 @@ composeBom = "2024.04.01"
 fragmentKtx = "1.8.6"
 lifecycleViewmodelCompose = "2.6.1"
 navigationCompose = "2.8.9"
+roomRuntime = "2.7.1"
 uiTextGoogleFonts = "1.8.0-rc02"
 firebaseAuth = "23.2.0"
 runtimeLivedata = "1.7.8"
@@ -20,6 +21,8 @@ firebaseFirestoreKtx = "25.1.4"
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 androidx-ui-text-google-fonts = { module = "androidx.compose.ui:ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -43,4 +46,5 @@ firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-fires
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 
