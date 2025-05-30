@@ -1,4 +1,4 @@
-package com.example.langlearnkt.ui.screens
+package com.example.langlearnkt.ui.screens.tasks
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.langlearnkt.data.entities.ParagraphData
-import com.example.langlearnkt.viewmodels.TitleParagraphTaskViewState
+import com.example.langlearnkt.viewmodels.tasks.TitleParagraphTaskViewState
 import kotlinx.coroutines.launch
 
 @Composable

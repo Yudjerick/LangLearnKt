@@ -1,15 +1,14 @@
-package com.example.langlearnkt.ui.screens
+package com.example.langlearnkt.ui.screens.tasks
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,7 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.langlearnkt.viewmodels.OrderTaskViewState
+import com.example.langlearnkt.ui.components.OrderTaskButton
+import com.example.langlearnkt.viewmodels.tasks.OrderTaskViewState
 
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -31,22 +31,26 @@ fun OrderTaskScreen(navController: NavController, viewModel: OrderTaskViewState)
             .fillMaxWidth()
 
     ) {
+        Text(
+            text = viewModel.task.text,
+            modifier = Modifier.padding(horizontal = 15.dp)
+                .height(40.dp),
+            color = Color.Gray
+        )
+        HorizontalDivider(thickness = 2.dp, color = Color.LightGray)
         FlowRow(
             modifier = Modifier
                 .wrapContentHeight()
-                .defaultMinSize(minHeight = 50.dp)
                 .padding(horizontal = 15.dp)
+                .defaultMinSize(minHeight = 100.dp)
         ){
 
             val givenAnswer by viewModel.givenAnswer.collectAsState()
             for (word in givenAnswer){
-                Button(
+                OrderTaskButton(
                     onClick = {viewModel.removeWordFromAnswer(word)},
-                    modifier = Modifier.padding(horizontal = 2.dp),
-                    contentPadding = PaddingValues(horizontal = 10.dp)
-                ) {
-                    Text(word.bankWord.content)
-                }
+                    text = word.bankWord.content
+                )
             }
         }
         HorizontalDivider(thickness = 2.dp, color = Color.LightGray)
@@ -58,14 +62,11 @@ fun OrderTaskScreen(navController: NavController, viewModel: OrderTaskViewState)
         ){
             val wordBank by viewModel.wordBank.collectAsState()
             for (word in wordBank){
-                Button(
+                OrderTaskButton(
                     onClick = {viewModel.addWordToAnswer(word)},
-                    enabled = word.buttonActive,
-                    modifier = Modifier.padding(horizontal = 2.dp),
-                    contentPadding = PaddingValues(horizontal = 10.dp)
-                ) {
-                    Text(word.content)
-                }
+                    text = word.content,
+                    enabled = word.buttonActive
+                )
             }
         }
     }

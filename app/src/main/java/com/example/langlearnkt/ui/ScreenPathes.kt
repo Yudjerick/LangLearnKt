@@ -6,9 +6,9 @@ object screenPathes {
     val login = "Login"
     val register = "Register"
     val lesson = "Lesson"
-    val campaignMenu = "CampaignMenu"
     val lessonFinished = "LessonFinished"
     val lessonsList = "LessonsList"
+    val controlMenu = "ControlMenu"
 }
 
 object lessonMetaDataToLoad{

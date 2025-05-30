@@ -1,6 +1,7 @@
 package com.example.langlearnkt.data.localcache
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -28,5 +29,8 @@ interface Dao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLessonResult(lessonResult: LessonResult)
+
+    @Query("DELETE FROM lesson_result WHERE userId = :userId")
+    suspend fun deleteLessonResultByUser(userId: String)
 }
 

@@ -2,6 +2,10 @@ package com.example.langlearnkt.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -18,18 +22,25 @@ import com.example.langlearnkt.ui.theme.fontFamilies
 
 @Preview
 @Composable
-fun LangLearnButton(onClick: () -> Unit = {}, text: String = "Text"){
+fun OrderTaskButton(onClick: () -> Unit = {}, text: String = "Text", enabled: Boolean = true){
     Button(
         onClick = onClick,
         colors = ButtonColors(Color.White,
             Color.Gray, Color.Gray, Color.Gray),
         border = BorderStroke(2.dp, Color.Gray),
-        shape = RoundedCornerShape(30)
+        shape = RoundedCornerShape(30),
+        enabled = enabled,
+        contentPadding = PaddingValues(8.dp),
+        modifier = Modifier.padding(4.dp)
+            .defaultMinSize(0.dp)
+            .wrapContentWidth()
         ) {
         Text(
             text = text,
             fontFamily = fontFamilies.nunito,
-            fontWeight = FontWeight.ExtraBold
+            fontWeight = FontWeight.ExtraBold,
+            modifier = Modifier.defaultMinSize(0.dp)
+                .wrapContentWidth()
         )
     }
 }

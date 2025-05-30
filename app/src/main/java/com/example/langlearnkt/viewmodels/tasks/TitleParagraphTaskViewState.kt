@@ -1,4 +1,4 @@
-package com.example.langlearnkt.viewmodels
+package com.example.langlearnkt.viewmodels.tasks
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -21,7 +21,7 @@ class TitleParagraphTaskViewState(
     val selectedTitle: LiveData<TitleBankItem?> = _selectedTitle
 
     private val _titleParagraphMaps = MutableLiveData<List<TitleParagraphMap>>(
-        task.paragraphs.map { x->TitleParagraphMap(x, null) }
+        task.paragraphs.map { x-> TitleParagraphMap(x, null) }
     )
     val titleParagraphMaps: LiveData<List<TitleParagraphMap>> = _titleParagraphMaps
 

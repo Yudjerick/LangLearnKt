@@ -1,4 +1,4 @@
-package com.example.langlearnkt.viewmodels
+package com.example.langlearnkt.viewmodels.tasks
 
 import com.example.langlearnkt.data.entities.OrderTask
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -1,0 +1,48 @@
+package com.example.langlearnkt.ui.screens
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.example.langlearnkt.ui.screenPathes
+import com.example.langlearnkt.viewmodels.ControlMenuViewModel
+
+@Composable
+fun ControlMenuScreen(navController: NavController, viewModel: ControlMenuViewModel = viewModel()){
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            TransparentCloseButton({navController.navigate(screenPathes.lessonsList)})
+        }
+        HorizontalDivider(thickness = 2.dp, color = Color.LightGray)
+        Button(
+            {
+                viewModel.signOut()
+                navController.navigate(screenPathes.login)
+            }
+        )
+        {
+            Text("Выйти из аккаунта")
+        }
+        Button({viewModel.clearLocalCache()}) {
+            Text("Очистить кэш")
+        }
+        Button({viewModel.deleteResults()}) {
+            Text("Удалить результаты прохождения уроков")
+        }
+    }
+}

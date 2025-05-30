@@ -11,12 +11,13 @@ import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.example.langlearnkt.data.converters.RoomTypeConverters
 import com.example.langlearnkt.data.lesson1
+import com.example.langlearnkt.data.lesson2
 import com.example.langlearnkt.data.localcache.AppDatabase
 import com.example.langlearnkt.data.repositories.LessonRepository
 import com.example.langlearnkt.ui.screens.LoginScreen
 import com.example.langlearnkt.ui.screens.RegisterScreen
 import com.example.langlearnkt.ui.screenPathes
-import com.example.langlearnkt.ui.screens.CampaignMenuScreen
+import com.example.langlearnkt.ui.screens.ControlMenuScreen
 import com.example.langlearnkt.ui.screens.LessonFinishedScreen
 import com.example.langlearnkt.ui.screens.LessonScreen
 import com.example.langlearnkt.ui.screens.LessonsListScreen
@@ -43,6 +44,7 @@ class MainActivity : ComponentActivity() {
 
         lifecycleScope.launch {
             //LessonRepository().saveLesson(lesson1)
+            //LessonRepository().saveLesson(lesson2)
         }
         
 
@@ -68,17 +70,17 @@ class MainActivity : ComponentActivity() {
                     composable(screenPathes.register) {
                         RegisterScreen(navController)
                     }
-                    composable(screenPathes.campaignMenu) {
-                        CampaignMenuScreen(navController)
-                    }
                     composable(route = screenPathes.lesson) {
                         LessonScreen(navController)
                     }
                     composable(screenPathes.lessonsList) {
                         LessonsListScreen(navController)
                     }
-
-            })
+                    composable(screenPathes.controlMenu) {
+                        ControlMenuScreen(navController)
+                    }
+                }
+            )
         }
     }
 }

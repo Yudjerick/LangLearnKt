@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 import com.example.langlearnkt.data.entities.LessonResult
 import com.example.langlearnkt.data.entities.RoomLesson
 import com.example.langlearnkt.data.localcache.AppDatabase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.tasks.await
@@ -48,6 +49,22 @@ class LessonResultRepository {
 
     }
 
+    suspend fun deleteResultsForUser(userId: String){
+        AppDatabase.instance.dao().deleteLessonResultByUser(userId)
+        val firestore = FirebaseFirestore.getInstance()
+        val results = firestore.collection("lesson_results")
+            .whereEqualTo("userId", userId)
+            .get()
+            .await()
+
+        val batch = firestore.batch()
+        for (document in results) {
+            batch.delete(document.reference)
+        }
+
+        batch.commit().await()
+    }
+
     private suspend fun getResultFromCache(userId: String, lessonId: String): LessonResult?{
         return AppDatabase.instance.dao().getLessonResult(lessonId, userId)
     }
@@ -55,5 +72,7 @@ class LessonResultRepository {
     private suspend fun saveResultToCache(result: LessonResult){
         AppDatabase.instance.dao().insertLessonResult(result)
     }
+
+
 }
 

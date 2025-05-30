@@ -39,9 +39,11 @@ import androidx.navigation.NavController
 import com.example.langlearnkt.data.entities.OrderTask
 import com.example.langlearnkt.data.entities.TitleParagraphTask
 import com.example.langlearnkt.ui.screenPathes
+import com.example.langlearnkt.ui.screens.tasks.OrderTaskScreen
+import com.example.langlearnkt.ui.screens.tasks.TitleParagraphTaskScreen
 import com.example.langlearnkt.viewmodels.LessonViewModel
-import com.example.langlearnkt.viewmodels.OrderTaskViewState
-import com.example.langlearnkt.viewmodels.TitleParagraphTaskViewState
+import com.example.langlearnkt.viewmodels.tasks.OrderTaskViewState
+import com.example.langlearnkt.viewmodels.tasks.TitleParagraphTaskViewState
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)

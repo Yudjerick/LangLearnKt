@@ -8,59 +8,62 @@ import com.example.langlearnkt.data.entities.ParagraphData
 import com.example.langlearnkt.data.entities.TitleParagraphTask
 
 val lesson1 = Lesson(
-    LessonMetaData("", "Test Lesson 1", "Mock description of lesson"),
+    LessonMetaData("", "Food 1", "Learn how to talk about food. Part 1"),
     LessonContent(
         "",
         listOf(
-            OrderTask("","", listOf("AAAA", "BBBB", "CCC", "DDDD"), listOf("11111")),
+            OrderTask("","Мне нравится итальянская кухня",
+                listOf("I", "like", "italian", "cuisine"),
+                listOf("hate", "You", "german", "kitchen")
+            ),
+            OrderTask("","Жареный рис",
+                listOf("fried", "rice"),
+                listOf("boiled", "wheat", "cooked", "noodles")
+            ),
+            OrderTask("","Мои любимые фрукты - ананасы",
+                listOf("My", "favourite", "fruits", "are", "pineapples"),
+                listOf("apples", "Your", "bananas", "vegetables", "nuts")
+            )
+        )
+    )
+)
+
+val lesson2 = Lesson(
+    LessonMetaData("", "Magnificent turtles", "Read text about turtles and complete task" ),
+    LessonContent(
+        id = "",
+        listOf(
             TitleParagraphTask(
                 listOf(
                     ParagraphData(
-                        "(A) In the early 2000s, scientists first noticed unusual temperature patterns in the region. " +
-                                "At first, the changes were small—slightly warmer winters, earlier springs—but over time, " +
-                                "the shifts became impossible to ignore. By 2010, it was clear that this was not normal " +
-                                "seasonal variation but part of a much larger trend.",
-                        "A",
-                        "The Origins of the Problem"
+                        text = "(A) Turtles are among the oldest living reptiles, with ancestors dating back over 200 million years. They outlived the dinosaurs and have adapted to nearly every environment on Earth—from oceans to deserts. Their resilience is a testament to their incredible evolutionary design.",
+                        letter = "A",
+                        title = "Ancient Survivors"
                     ),
                     ParagraphData(
-                        "(B) As temperatures rose, farmers struggled with unpredictable growing seasons. Some crops " +
-                                "bloomed too early and were damaged by late frosts, while others failed entirely due to drought. " +
-                                "Meanwhile, coastal towns faced increased flooding, forcing some residents to relocate. " +
-                                "Everyday life became more uncertain.",
-                        "B",
-                        "Immediate Effects on Daily Life"
+                        text = "(B) A turtle's shell is not just a home—it's part of its skeleton! Made of over 50 fused bones, the shell provides protection from predators. Contrary to popular belief, a turtle cannot crawl out of its shell—it’s permanently attached to its body.",
+                        letter = "B",
+                        title = "Built-In Armor"
                     ),
                     ParagraphData(
-                        "(C) Researchers discovered that ocean currents were shifting due to melting polar ice. This " +
-                                "altered weather patterns worldwide, creating a chain reaction. Warmer air held more moisture, " +
-                                "leading to stronger storms, while other areas experienced extreme heatwaves. The science was " +
-                                "complex, but the evidence was undeniable.",
-                        "C",
-                        "Scientific Explanations Behind the Phenomenon"
+                        text = "(C) Turtles are famous for their slow pace, but this isn’t a weakness—it’s a survival strategy. Moving slowly helps them conserve energy, making them efficient survivors in harsh conditions. Some species, like the leatherback sea turtle, defy this stereotype by swimming thousands of miles across oceans!",
+                        letter = "C",
+                        title = "Slow and Steady Wins the Race"
                     ),
                     ParagraphData(
-                        "(D) Local governments began building flood barriers and updating infrastructure, but funding " +
-                                "was limited. On a national level, debates raged over whether to prioritize short-term relief " +
-                                "or long-term prevention. Some policies helped, but many argued they were too little, too late.",
-                        "D",
-                        "Government Responses and Policies"
+                        text = "(D) Many turtle species live exceptionally long lives. Some tortoises can live over 150 years, with the oldest recorded tortoise, Jonathan, reaching nearly 190 years old! Their slow metabolism and low-stress lifestyle contribute to their impressive lifespan.",
+                        letter = "D",
+                        title = "Longevity Champions"
                     ),
                     ParagraphData(
-                        "(E) In response, grassroots movements emerged. Neighborhoods developed emergency plans, and " +
-                                "farmers experimented with drought-resistant crops. Schools taught children about conservation, " +
-                                "and families adopted new habits to reduce waste. People realized that waiting for official " +
-                                "solutions wasn't an option.",
-                        "E",
-                        "How Communities Are Adapting"
+                        text = "(E) Sea turtles have an incredible sense of direction. They can detect Earth’s magnetic field, allowing them to migrate across vast oceans and return to the exact beach where they were born to lay their own eggs. Scientists are still unraveling the mysteries of their navigation skills.",
+                        letter = "E",
+                        title = "Masters of Navigation"
                     ),
                     ParagraphData(
-                        "(F) If current trends continue, experts warn of mass migrations, food shortages, and economic " +
-                                "instability. However, some believe technology and global cooperation could still mitigate the " +
-                                "worst outcomes. The next decade will be decisive in determining whether adaptation is possible—" +
-                                "or if irreversible damage is unavoidable.",
-                        "F",
-                        "Predictions for the Future"
+                        text = "(F) Despite surviving for millions of years, many turtle species are now endangered due to habitat destruction, pollution, and poaching. Conservation efforts, like protecting nesting beaches and reducing plastic waste, are crucial to ensuring these remarkable creatures thrive for generations to come.",
+                        letter = "F",
+                        title = "Threatened by Human Activity"
                     )
                 )
             )

@@ -12,6 +12,9 @@ import com.example.langlearnkt.data.lesson1
 import com.example.langlearnkt.data.repositories.LessonRepository
 import com.example.langlearnkt.data.repositories.LessonResultRepository
 import com.example.langlearnkt.ui.lessonMetaDataToLoad
+import com.example.langlearnkt.viewmodels.tasks.OrderTaskViewState
+import com.example.langlearnkt.viewmodels.tasks.TaskViewState
+import com.example.langlearnkt.viewmodels.tasks.TitleParagraphTaskViewState
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -69,7 +72,7 @@ class LessonViewModel() : ViewModel() {
         return result
     }
 
-    private fun getTaskViewModel(task: Task): TaskViewState{
+    private fun getTaskViewModel(task: Task): TaskViewState {
         when(task){
             is OrderTask -> return OrderTaskViewState(task)
             is TitleParagraphTask -> return TitleParagraphTaskViewState(task)
