@@ -11,10 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.langlearnkt.ui.components.LL_FunctionButton
 import com.example.langlearnkt.ui.screenPathes
+import com.example.langlearnkt.ui.theme.fontFamilies
 import nl.dionsegijn.konfetti.compose.KonfettiView
 import nl.dionsegijn.konfetti.core.Angle
 import nl.dionsegijn.konfetti.core.Party
@@ -61,7 +63,10 @@ fun LessonFinishedScreen(navController: NavController){
     ) {
         Text(
             text = "Урок пройден",
-            fontSize = 20.sp
+            fontSize = 24.sp,
+            color = Color.Gray,
+            fontFamily = fontFamilies.nunito
+
         )
         LL_FunctionButton(
             onClick = {navController.navigate(screenPathes.lessonsList)},

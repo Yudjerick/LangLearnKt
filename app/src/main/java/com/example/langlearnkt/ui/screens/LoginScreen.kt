@@ -2,12 +2,15 @@ package com.example.langlearnkt.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -24,13 +27,17 @@ import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.langlearnkt.R
+import com.example.langlearnkt.ui.components.LL_FunctionContentButton
 import com.example.langlearnkt.ui.components.LL_TextField
 import com.example.langlearnkt.ui.screenPathes
+import com.example.langlearnkt.ui.theme.fontFamilies
 import com.example.langlearnkt.viewmodels.LoginScreenViewModel
 import com.example.langlearnkt.viewmodels.AuthRequestState
 import kotlinx.coroutines.flow.collectLatest
@@ -54,12 +61,25 @@ fun LoginScreen(
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally)
     {
-        Image(
-            painterResource(R.drawable.bg_waves),
-            "",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxWidth()
-        )
+        Box(
+            modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+            contentAlignment = Alignment.TopCenter
+        ){
+            Image(
+                painterResource(R.drawable.bg_waves),
+                "",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Text(
+                text = "Войдите в аккаунт",
+                fontSize = 24.sp,
+                color = Color.White,
+                modifier = Modifier.padding(vertical = 45.dp),
+                fontFamily = fontFamilies.nunito,
+                fontWeight = FontWeight(1000)
+            )
+        }
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.Bottom),
@@ -75,13 +95,13 @@ fun LoginScreen(
                 onValueChange = { viewModel.updatePasswordFieldValue(it) },
                 labelText = "password",
             )
-            Button(
-                contentPadding = PaddingValues(horizontal = 80.dp),
+            LL_FunctionContentButton(
                 onClick = { viewModel.loginUserWithEmail(email.value, password.value) },
                 enabled = !waitForRequest.value
             ) {
                 if (!waitForRequest.value) {
-                    Text("Вход")
+                    Text("Вход", fontFamily = fontFamilies.nunito,
+                        fontSize = 20.sp, fontWeight = FontWeight.Black)
                 } else {
                     CircularProgressIndicator()
                 }
@@ -103,17 +123,21 @@ fun LoginScreen(
                 else -> {}
             }
             Spacer(Modifier.height(70.dp))
-            Text(buildAnnotatedString {
-                append("Нет аккаунта? ")
-                val link =
-                    LinkAnnotation.Clickable(
-                        "",
-                        TextLinkStyles(SpanStyle(color = Color.Blue))
-                    ) {
-                        navController.navigate(screenPathes.register)
-                    }
-                withLink(link) { append("Зарегистрируйтесь") }
-            })
+            Text(
+                buildAnnotatedString {
+                    append("Нет аккаунта? ")
+                    val link =
+                        LinkAnnotation.Clickable(
+                            "",
+                            TextLinkStyles(SpanStyle(color = Color.Blue))
+                        ) {
+                            navController.navigate(screenPathes.register)
+                        }
+                    withLink(link) { append("Зарегистрируйтесь") }
+                },
+                color = Color.Gray,
+                fontFamily = fontFamilies.nunito
+            )
             Spacer(Modifier.height(50.dp))
         }
     }

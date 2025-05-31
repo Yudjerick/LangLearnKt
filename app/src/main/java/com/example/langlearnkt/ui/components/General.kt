@@ -3,6 +3,7 @@ package com.example.langlearnkt.ui.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -20,6 +21,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.langlearnkt.R
 import com.example.langlearnkt.ui.theme.fontFamilies
 import com.example.langlearnkt.viewmodels.LessonViewModel
@@ -58,7 +60,7 @@ fun LL_TextField(
     TextField(
         value = value,
         onValueChange = onValueChange,
-        label = { Text(text = labelText) },
+        label = { Text(text = labelText, fontFamily = fontFamilies.nunito) },
         shape = RoundedCornerShape(10.dp),
         modifier = Modifier.border(2.dp, Color.Gray, RoundedCornerShape(10.dp)),
         colors = TextFieldDefaults.colors(
@@ -69,7 +71,7 @@ fun LL_TextField(
 }
 
 @Composable
-fun LL_FunctionButton(onClick: () -> Unit, text: String){
+fun LL_FunctionButton(onClick: () -> Unit, text: String, enabled: Boolean = true){
     Button(
         onClick = onClick,
         Modifier.padding(vertical = 10.dp, horizontal = 20.dp).fillMaxWidth(),
@@ -81,7 +83,36 @@ fun LL_FunctionButton(onClick: () -> Unit, text: String){
         ),
         border = BorderStroke(2.dp, colorResource(R.color.dark_purple)),
         shape = RoundedCornerShape(30),
+        enabled = enabled
     ) {
-        Text(text)
+        Text(
+            text,
+            fontFamily = fontFamilies.nunito,
+            fontWeight = FontWeight.Black,
+            fontSize = 20.sp
+        )
+    }
+}
+
+@Composable
+fun LL_FunctionContentButton(
+    onClick: () -> Unit,
+    enabled: Boolean = true,
+    content: @Composable() (RowScope.() -> Unit)
+){
+    Button(
+        onClick = onClick,
+        Modifier.padding(vertical = 10.dp, horizontal = 20.dp).fillMaxWidth(),
+        colors = ButtonColors(
+            colorResource(R.color.purple_200),
+            Color.White,
+            Color.Gray,
+            Color.Gray
+        ),
+        border = BorderStroke(2.dp, colorResource(R.color.dark_purple)),
+        shape = RoundedCornerShape(30),
+        enabled = enabled
+    ) {
+        content()
     }
 }

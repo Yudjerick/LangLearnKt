@@ -29,9 +29,6 @@ class LessonsListViewModel: ViewModel() {
             val results = mutableListOf<Float?>()
             val resultRepository = LessonResultRepository()
             val userId = FirebaseAuth.getInstance().currentUser!!.uid
-            /*lessonItems.value!!.forEach { x ->
-                results.add(LessonResultRepository().getResult(userId, x.metaData.id!!))
-            }*/
             lessonItems.value!!.forEach{ x ->
                 _lessonItems.value = _lessonItems.value!!.map{ item ->
                     if(x != item) item

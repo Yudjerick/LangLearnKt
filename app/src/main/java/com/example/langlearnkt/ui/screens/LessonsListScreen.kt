@@ -42,7 +42,9 @@ import com.example.langlearnkt.data.entities.LessonMetaData
 import com.example.langlearnkt.data.lesson1
 import com.example.langlearnkt.ui.lessonMetaDataToLoad
 import com.example.langlearnkt.ui.screenPathes
+import com.example.langlearnkt.ui.theme.fontFamilies
 import com.example.langlearnkt.viewmodels.LessonsListViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 
 @Composable
@@ -60,10 +62,18 @@ fun LessonsListScreen(
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start,
+            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
             ControlMenuButton({navController.navigate(screenPathes.controlMenu)})
+            FirebaseAuth.getInstance().currentUser?.email?.let {
+                Text(
+                    text = it,
+                    fontSize = 16.sp,
+                    color = Color.Gray,
+                    modifier = Modifier.padding(horizontal = 15.dp)
+                )
+            }
         }
         HorizontalDivider(thickness = 2.dp, color = Color.LightGray)
         if(lessonsData.value.isEmpty()){
@@ -114,7 +124,8 @@ fun LessonListItem(data: LessonsListViewModel.LessonListItem, navController: Nav
                     text = it,
                     fontSize = 20.sp,
                     modifier = Modifier.padding(horizontal = 15.dp, vertical = 3.dp),
-                    color = Color.Gray
+                    color = Color.Gray,
+                    fontFamily = fontFamilies.nunito
                 )
             }
             metadata.description?.let {
@@ -122,7 +133,8 @@ fun LessonListItem(data: LessonsListViewModel.LessonListItem, navController: Nav
                     text = it,
                     fontSize = 14.sp,
                     modifier = Modifier.padding(horizontal = 15.dp, vertical = 3.dp),
-                    color = Color.LightGray
+                    color = Color.LightGray,
+                    fontFamily = fontFamilies.nunito
                 )
             }
             if(data.result!= null) {
@@ -130,7 +142,8 @@ fun LessonListItem(data: LessonsListViewModel.LessonListItem, navController: Nav
                     text = "Score: " + "%.2f".format(data.result),
                     fontSize = 14.sp,
                     modifier = Modifier.padding(horizontal = 15.dp, vertical = 3.dp),
-                    color = Color.LightGray
+                    color = Color.LightGray,
+                    fontFamily = fontFamilies.nunito
                 )
             }
             Spacer(Modifier.height(5.dp))
@@ -146,14 +159,14 @@ fun ControlMenuButton(
 ) {
     Box(
         modifier = modifier
-            .size(48.dp) // Размер кнопки
-            .clip(CircleShape) // Круглая форма
-            .clickable(onClick = onClick) // Обработка клика
-            .background(backgroundColor, CircleShape), // Прозрачный фон
+            .size(48.dp)
+            .clip(CircleShape)
+            .clickable(onClick = onClick)
+            .background(backgroundColor, CircleShape),
         contentAlignment = Center
     ) {
         Icon(
-            painter = painterResource(R.drawable.settings_icon), // Иконка крестика
+            painter = painterResource(R.drawable.settings_icon),
             contentDescription = "Close",
             tint = Color.LightGray,
             modifier = Modifier.size(24.dp)

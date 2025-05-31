@@ -67,6 +67,7 @@ fun TitleParagraphTaskScreen(navController: NavController, viewModel: TitleParag
                         fontFamily = fontFamilies.nunito,
                         text = paragraph.text,
                         fontSize = 16.sp,
+                        color = Color.Gray,
                         modifier = Modifier
                             .padding(vertical = 5.dp)
                             .onGloballyPositioned { coordinates ->
