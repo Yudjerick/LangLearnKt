@@ -85,5 +85,6 @@ dependencies {
 
 
     implementation("com.google.code.gson:gson:2.13.1")
+    implementation("nl.dionsegijn:konfetti-compose:2.0.5")
 
 }

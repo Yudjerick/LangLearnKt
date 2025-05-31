@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.langlearnkt.ui.components.LL_FunctionButton
 import com.example.langlearnkt.ui.screenPathes
 import com.example.langlearnkt.viewmodels.ControlMenuViewModel
 
@@ -29,20 +30,20 @@ fun ControlMenuScreen(navController: NavController, viewModel: ControlMenuViewMo
             TransparentCloseButton({navController.navigate(screenPathes.lessonsList)})
         }
         HorizontalDivider(thickness = 2.dp, color = Color.LightGray)
-        Button(
-            {
+        LL_FunctionButton(
+            onClick = {
                 viewModel.signOut()
                 navController.navigate(screenPathes.login)
-            }
+            },
+            text = "Выйти из аккаунта"
         )
-        {
-            Text("Выйти из аккаунта")
-        }
-        Button({viewModel.clearLocalCache()}) {
-            Text("Очистить кэш")
-        }
-        Button({viewModel.deleteResults()}) {
-            Text("Удалить результаты прохождения уроков")
-        }
+        LL_FunctionButton(
+            onClick = {viewModel.clearLocalCache()},
+            text = "Очистить кэш"
+        )
+        LL_FunctionButton(
+            onClick = {viewModel.deleteResults()},
+            text = "Удалить результаты прохождения уроков"
+        )
     }
 }

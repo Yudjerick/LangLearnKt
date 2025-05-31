@@ -1,5 +1,6 @@
 package com.example.langlearnkt.ui.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -18,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -32,12 +34,15 @@ import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.langlearnkt.R
 import com.example.langlearnkt.data.entities.OrderTask
 import com.example.langlearnkt.data.entities.TitleParagraphTask
+import com.example.langlearnkt.ui.components.LL_FunctionButton
 import com.example.langlearnkt.ui.screenPathes
 import com.example.langlearnkt.ui.screens.tasks.OrderTaskScreen
 import com.example.langlearnkt.ui.screens.tasks.TitleParagraphTaskScreen
@@ -72,7 +77,7 @@ fun LessonScreen(navController: NavController, viewModel: LessonViewModel = view
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            TransparentCloseButton({})
+            TransparentCloseButton({navController.navigate(screenPathes.lessonsList)})
             RoundedProgressBar(
                 (currentTaskIdx.toFloat() / viewModel.lesson.content.tasks.count().toFloat()),
                 Color.Green,
@@ -92,14 +97,11 @@ fun LessonScreen(navController: NavController, viewModel: LessonViewModel = view
             }
         }
         HorizontalDivider(thickness = 2.dp, color = Color.LightGray)
-        Button(
+        LL_FunctionButton(
             onClick = { viewModel.setTaskStatus(if (viewModel.checkAndSaveTaskResult())
                 LessonViewModel.TaskStatus.Right else LessonViewModel.TaskStatus.Wrong)},
-            Modifier.padding(vertical = 10.dp)
-        ) {
-            Text("Проверить")
-        }
-
+            text = "Проверить"
+        )
         if(taskStatus.value != LessonViewModel.TaskStatus.Unchecked){
             ModalBottomSheet(
                 onDismissRequest = {viewModel.nextTask()},
@@ -125,14 +127,12 @@ fun LessonScreen(navController: NavController, viewModel: LessonViewModel = view
                         LessonViewModel.TaskStatus.Unchecked -> {}
                     }
                     Spacer(Modifier.height(10.dp))
-                    Button(
+                    LL_FunctionButton(
                         onClick = {
                             viewModel.nextTask()
                         },
-                        contentPadding = PaddingValues(horizontal = 50.dp)
-                    ) {
-                        Text("Далее")
-                    }
+                        text = "Далее"
+                    )
                     Spacer(Modifier.height(60.dp))
                 }
 
@@ -145,7 +145,7 @@ fun LessonScreen(navController: NavController, viewModel: LessonViewModel = view
 
 @Composable
 fun RoundedProgressBar(
-    progress: Float, // 0f..1f
+    progress: Float,
     filledColor: Color,
     backgroundColor: Color,
     modifier: Modifier = Modifier

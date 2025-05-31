@@ -24,6 +24,9 @@ interface Dao {
     @Insert
     suspend fun insertLesson(lesson: RoomLesson)
 
+    @Query("SELECT * FROM lesson LIMIT :limit")
+    suspend fun getAllLessons(limit: Int): List<RoomLesson>
+
     @Query("SELECT * FROM lesson_result WHERE lessonId = :lessonId AND userId = :userId LIMIT 1")
     suspend fun getLessonResult(lessonId: String, userId: String): LessonResult?
 

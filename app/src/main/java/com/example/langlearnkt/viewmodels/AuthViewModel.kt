@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.langlearnkt.data.repositories.UserRepository
+import kotlinx.coroutines.flow.MutableSharedFlow
 
 abstract class AuthViewModel: ViewModel()
 {
@@ -20,6 +21,8 @@ abstract class AuthViewModel: ViewModel()
 
     protected val _regSuccess = MutableLiveData<AuthRequestState>(AuthRequestState.WAIT)
     val regSuccess : LiveData<AuthRequestState> = _regSuccess
+
+    val loggedInEvent = MutableSharedFlow<Unit>()
 
     fun updateEmailFieldValue(value: String){
         _emailFieldText.value = value

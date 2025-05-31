@@ -13,6 +13,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,6 +33,7 @@ import com.example.langlearnkt.ui.components.LL_TextField
 import com.example.langlearnkt.ui.screenPathes
 import com.example.langlearnkt.viewmodels.AuthRequestState
 import com.example.langlearnkt.viewmodels.RegisterScreenViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 
 @Composable
@@ -43,6 +45,11 @@ fun RegisterScreen(
     val password = viewModel.passwordFieldText.observeAsState("")
     val waitForRequest = viewModel.waitForRequest.observeAsState(false)
     val regSuccess = viewModel.regSuccess.observeAsState(AuthRequestState.WAIT)
+    LaunchedEffect(Unit) {
+        viewModel.loggedInEvent.collectLatest {
+            navController.navigate(screenPathes.lessonsList)
+        }
+    }
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween,
@@ -81,11 +88,12 @@ fun RegisterScreen(
                 }
             }
             when (regSuccess.value) {
-                AuthRequestState.SUCCESS ->
+                AuthRequestState.SUCCESS -> {
                     Text(
                         "Регистрация успешна",
                         color = Color.Green
                     )
+                }
 
                 AuthRequestState.FAILURE ->
                     Text(

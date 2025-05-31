@@ -15,6 +15,7 @@ class RegisterScreenViewModel: AuthViewModel() {
             _waitForRequest.postValue(false)
             if (success){
                 _regSuccess.postValue(AuthRequestState.SUCCESS)
+                loggedInEvent.emit(Unit)
             }
             else {
                 _regSuccess.postValue(AuthRequestState.FAILURE)

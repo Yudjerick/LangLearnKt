@@ -16,6 +16,31 @@ import kotlinx.coroutines.tasks.await
 
 class LessonRepository(){
     suspend fun getLessonsMetaDataList(): List<LessonMetaData> {
+        /*try {
+            val cachedMetadata = AppDatabase.instance.dao().getAllLessons(100).map {
+                x -> LessonMetaData(x.id, x.title, x.description)
+            }
+            if (cachedMetadata.isNotEmpty()){
+                return cachedMetadata
+            }
+        }
+        catch (e: Exception){
+            Log.e("AAA", e.message.toString())
+        }*/
+        return try {
+            FirebaseFirestore.getInstance()
+                .collection("lessons_meta")
+                .get()
+                .await()
+                .documents
+                .mapNotNull { document -> document.toObject<LessonMetaData>() }
+        } catch (e: Exception) {
+            Log.e("Firestore", "Ошибка загрузки уроков", e)
+            emptyList()
+        }
+    }
+
+    suspend fun getFreshLessonsMetaDataList(): List<LessonMetaData> {
         return try {
             FirebaseFirestore.getInstance()
                 .collection("lessons_meta")
@@ -90,7 +115,6 @@ class LessonRepository(){
     }
 
     private suspend fun saveLessonInCache(lesson: Lesson){
-
         AppDatabase.instance.dao().insertLesson(RoomLesson.toRoomLesson(lesson))
     }
 }

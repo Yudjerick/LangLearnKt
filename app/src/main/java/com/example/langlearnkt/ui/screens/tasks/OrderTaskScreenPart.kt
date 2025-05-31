@@ -1,5 +1,6 @@
 package com.example.langlearnkt.ui.screens.tasks
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -17,8 +18,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.langlearnkt.ui.components.OrderTaskButton
+import com.example.langlearnkt.ui.theme.fontFamilies
 import com.example.langlearnkt.viewmodels.tasks.OrderTaskViewState
 
 
@@ -33,10 +36,12 @@ fun OrderTaskScreen(navController: NavController, viewModel: OrderTaskViewState)
     ) {
         Text(
             text = viewModel.task.text,
-            modifier = Modifier.padding(horizontal = 15.dp)
-                .height(40.dp),
-            color = Color.Gray
+            modifier = Modifier.padding(15.dp),
+            color = Color.Gray,
+            fontFamily = fontFamilies.nunito,
+            fontSize = 18.sp
         )
+
         HorizontalDivider(thickness = 2.dp, color = Color.LightGray)
         FlowRow(
             modifier = Modifier
