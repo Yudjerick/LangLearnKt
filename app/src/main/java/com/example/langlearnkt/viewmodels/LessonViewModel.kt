@@ -11,7 +11,6 @@ import com.example.langlearnkt.data.entities.TitleParagraphTask
 import com.example.langlearnkt.data.lesson1
 import com.example.langlearnkt.data.repositories.LessonRepository
 import com.example.langlearnkt.data.repositories.LessonResultRepository
-import com.example.langlearnkt.data.LessonMetaDataToLoad
 import com.example.langlearnkt.viewmodels.tasks.OrderTaskViewState
 import com.example.langlearnkt.viewmodels.tasks.TaskViewState
 import com.example.langlearnkt.viewmodels.tasks.TitleParagraphTaskViewState
@@ -79,19 +78,17 @@ class LessonViewModel() : ViewModel() {
         }
     }
 
-    fun loadLesson(){
+    fun loadLesson(lessonId: String){
         viewModelScope.launch {
-            LessonMetaDataToLoad.metadata?.let {
-                lesson = LessonRepository().getLesson(it)!!
-                _currentTaskIdx.value = 0
-                taskViewState = getTaskViewModel(lesson.content.tasks[currentTaskIdx.value!!])
-                setTaskStatus(TaskStatus.Unchecked)
-                _isLoading.value = false
-                tasksResults = MutableList<Float?>(
-                    lesson.content.tasks.size,
-                    init = { _ -> null},
-                )
-            }
+            lesson = LessonRepository().getLesson(lessonId)!!
+            _currentTaskIdx.value = 0
+            taskViewState = getTaskViewModel(lesson.content.tasks[currentTaskIdx.value!!])
+            setTaskStatus(TaskStatus.Unchecked)
+            _isLoading.value = false
+            tasksResults = MutableList<Float?>(
+                lesson.content.tasks.size,
+                init = { _ -> null},
+            )
         }
 
     }

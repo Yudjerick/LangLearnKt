@@ -35,8 +35,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.langlearnkt.LessonRoute
 import com.example.langlearnkt.R
-import com.example.langlearnkt.data.LessonMetaDataToLoad
 import com.example.langlearnkt.ui.screenPathes
 import com.example.langlearnkt.ui.theme.fontFamilies
 import com.example.langlearnkt.viewmodels.LessonsListViewModel
@@ -92,8 +92,8 @@ fun LessonListItem(data: LessonsListViewModel.LessonListItem, navController: Nav
         .padding(horizontal = 15.dp, vertical = 0.dp)
         .fillMaxWidth()
         .clickable {
-            LessonMetaDataToLoad.metadata = metadata
-            navController.navigate(screenPathes.lesson)
+            //LessonMetaDataToLoad.metadata = metadata
+            navController.navigate(LessonRoute(metadata.id!!))
         }
     ) {
         Box(

@@ -53,9 +53,13 @@ import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LessonScreen(navController: NavController, viewModel: LessonViewModel = viewModel()){
+fun LessonScreen(
+    navController: NavController,
+    lessonId: String,
+    viewModel: LessonViewModel = viewModel()
+){
 
-    LaunchedEffect(Unit) { viewModel.loadLesson() }
+    LaunchedEffect(Unit) { viewModel.loadLesson(lessonId) }
     LaunchedEffect(Unit) {
         viewModel.finishedEvent.collectLatest {
             navController.navigate(screenPathes.lessonFinished)

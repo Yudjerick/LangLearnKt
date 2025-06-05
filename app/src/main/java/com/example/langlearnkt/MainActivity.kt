@@ -10,8 +10,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import androidx.room.Room
 import com.example.langlearnkt.data.converters.RoomTypeConverters
+import com.example.langlearnkt.data.entities.Lesson
 import com.example.langlearnkt.data.lesson1
 import com.example.langlearnkt.data.lesson2
 import com.example.langlearnkt.data.localcache.AppDatabase
@@ -79,8 +81,10 @@ class MainActivity : ComponentActivity() {
                     composable(screenPathes.register) {
                         RegisterScreen(navController)
                     }
-                    composable(route = screenPathes.lesson) {
-                        LessonScreen(navController)
+                    composable<LessonRoute>{
+                        backStackEntry ->
+                        val lessonRoute: LessonRoute = backStackEntry.toRoute()
+                        LessonScreen(navController, lessonRoute.lessonId)
                     }
                     composable(screenPathes.lessonsList) {
                         LessonsListScreen(navController)

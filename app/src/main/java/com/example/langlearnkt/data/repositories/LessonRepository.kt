@@ -54,9 +54,9 @@ class LessonRepository(){
         }
     }
 
-    suspend fun getLesson(metaData: LessonMetaData): Lesson? {
+    suspend fun getLesson(lessonId: String): Lesson? {
         try {
-            val cachedLesson = getLessonFromCache(metaData)
+            val cachedLesson = getLessonFromCache(lessonId)
             if (cachedLesson != null){
                 return cachedLesson
             }
@@ -66,13 +66,19 @@ class LessonRepository(){
         }
 
         return try {
-            val contentDoc = FirebaseFirestore.getInstance()
-                .collection("lessons_content").document(metaData.id!!).get()
+            val firestore = FirebaseFirestore.getInstance()
+            val contentDoc = firestore
+                .collection("lessons_content").document(lessonId).get()
                 .await().data
+            val metadataDoc = firestore.collection("lessons_meta")
+                .document(lessonId).get().
+                await().data
             val tasks = contentDoc?.get("tasks") as? List<Map<String, Any>> ?: emptyList()
             val id = contentDoc?.get("id") as String
+            val description = metadataDoc?.get("description") as String
+            val title = metadataDoc.get("title") as String
             val result = Lesson(
-                metaData,
+                LessonMetaData(id, title, description),
                 LessonContent(
                     id = id,
                     tasks = tasks.mapNotNull { FirestoreConverter().mapToTask(it) }
@@ -110,8 +116,8 @@ class LessonRepository(){
         }
     }
 
-    private suspend fun getLessonFromCache(metaData: LessonMetaData): Lesson?{
-        return RoomLesson.toLesson(AppDatabase.instance.dao().getLesson(metaData.id!!))
+    private suspend fun getLessonFromCache(lessonId: String): Lesson?{
+        return RoomLesson.toLesson(AppDatabase.instance.dao().getLesson(lessonId))
     }
 
     private suspend fun saveLessonInCache(lesson: Lesson){
