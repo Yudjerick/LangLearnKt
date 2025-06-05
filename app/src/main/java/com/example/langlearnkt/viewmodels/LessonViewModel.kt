@@ -11,7 +11,7 @@ import com.example.langlearnkt.data.entities.TitleParagraphTask
 import com.example.langlearnkt.data.lesson1
 import com.example.langlearnkt.data.repositories.LessonRepository
 import com.example.langlearnkt.data.repositories.LessonResultRepository
-import com.example.langlearnkt.ui.lessonMetaDataToLoad
+import com.example.langlearnkt.data.LessonMetaDataToLoad
 import com.example.langlearnkt.viewmodels.tasks.OrderTaskViewState
 import com.example.langlearnkt.viewmodels.tasks.TaskViewState
 import com.example.langlearnkt.viewmodels.tasks.TitleParagraphTaskViewState
@@ -81,7 +81,7 @@ class LessonViewModel() : ViewModel() {
 
     fun loadLesson(){
         viewModelScope.launch {
-            lessonMetaDataToLoad.metadata?.let {
+            LessonMetaDataToLoad.metadata?.let {
                 lesson = LessonRepository().getLesson(it)!!
                 _currentTaskIdx.value = 0
                 taskViewState = getTaskViewModel(lesson.content.tasks[currentTaskIdx.value!!])

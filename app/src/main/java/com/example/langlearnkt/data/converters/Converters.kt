@@ -87,7 +87,6 @@ class RoomTypeConverters{
             val taskMaps: List<Map<String, Any>> = GsonBuilder().create().fromJson(string, type)
             return taskMaps.map { mapConverter.mapToTask(it) }
         } catch (e: Exception) {
-            // Логируем ошибку или выбрасываем исключение в зависимости от требований
             throw IllegalArgumentException("Failed to parse tasks list from JSON", e)
         }
     }

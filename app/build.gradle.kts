@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("com.google.gms.google-services")
     id("com.google.devtools.ksp")
-
+    kotlin("plugin.serialization") version "2.0.21"
 }
 
 
@@ -86,5 +86,7 @@ dependencies {
 
     implementation("com.google.code.gson:gson:2.13.1")
     implementation("nl.dionsegijn:konfetti-compose:2.0.5")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 
 }

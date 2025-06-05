@@ -16,6 +16,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,6 +38,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -49,20 +53,17 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun TitleParagraphTaskScreen(navController: NavController, viewModel: TitleParagraphTaskViewState){
-    val scrollState = rememberScrollState()
+    val scrollState = rememberLazyListState()
     val scope = rememberCoroutineScope()
-    val paragraphPositions = remember { mutableMapOf<ParagraphData, Int>() }
+    val paragraphs = viewModel.paragraphs.observeAsState(listOf()).value
+    val titles = viewModel.titleBank.observeAsState(listOf()).value
     Column(Modifier.fillMaxHeight()) {
         Box(
             Modifier.fillMaxHeight(0.6f).padding(horizontal = 15.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .verticalScroll(scrollState)
-                    .fillMaxWidth()
-            ) {
-                Spacer(Modifier.height(20.dp))
-                for(paragraph in viewModel.paragraphs.observeAsState(listOf()).value){
+            LazyColumn(state = scrollState) {
+                item() { Spacer(Modifier.height(20.dp)) }
+                items( paragraphs ){ paragraph ->
                     Text(
                         fontFamily = fontFamilies.nunito,
                         text = paragraph.text,
@@ -70,14 +71,9 @@ fun TitleParagraphTaskScreen(navController: NavController, viewModel: TitleParag
                         color = Color.Gray,
                         modifier = Modifier
                             .padding(vertical = 5.dp)
-                            .onGloballyPositioned { coordinates ->
-                                paragraphPositions[paragraph] = coordinates
-                                    .positionInParent().y.toInt()
-                            }
                     )
                 }
-
-                Spacer(Modifier.height(20.dp))
+                item() { Spacer(Modifier.height(20.dp)) }
             }
         }
         HorizontalDivider(thickness = 2.dp, color = Color.LightGray)
@@ -99,9 +95,7 @@ fun TitleParagraphTaskScreen(navController: NavController, viewModel: TitleParag
                         onMapClick = { viewModel.onMapClick(map) },
                         onLetterClick = {
                             scope.launch {
-                                paragraphPositions[map.letterParagraph]?.let { pos ->
-                                    scrollState.animateScrollTo(pos)
-                                }
+                                scrollState.animateScrollToItem(paragraphs.indexOf(map.letterParagraph) + 1 )
                             }
                         }
                     )
@@ -109,33 +103,18 @@ fun TitleParagraphTaskScreen(navController: NavController, viewModel: TitleParag
                 Spacer(Modifier.height(15.dp))
             }
             VerticalDivider(thickness = 2.dp, color = Color.LightGray)
-            Column (
-                modifier = Modifier
-                    .padding(horizontal = 15.dp)
-                    .verticalScroll(rememberScrollState())
-            ){
-                Spacer(Modifier.height(15.dp))
-                for (title in viewModel.titleBank.observeAsState(listOf()).value)
-                {
+            LazyColumn(modifier = Modifier.padding(horizontal = 15.dp)) {
+                item { Spacer(Modifier.height(15.dp)) }
+                items(titles) {title ->
                     TitleButton(
                         onClick = { viewModel.onTitleClick(title) },
                         enabled = title.active,
-                        colors =
-                        if (title == viewModel.selectedTitle.observeAsState().value)
-                            ButtonDefaults.buttonColors(
-                                containerColor = Color.LightGray,
-                                contentColor = Color.Gray
-                            )
-                        else
-                            ButtonDefaults.buttonColors(
-                                containerColor = Color.White,
-                                contentColor = Color.Gray
-                            ),
+                        highlighted = title == viewModel.selectedTitle.observeAsState().value,
                         text = title.number.toString() + ". " + title.paragraph.title,
                         modifier = Modifier.padding(vertical = 2.dp)
                     )
                 }
-                Spacer(Modifier.height(15.dp))
+                item { Spacer(Modifier.height(15.dp)) }
             }
         }
     }
@@ -210,14 +189,15 @@ fun TitleButton(
     onClick: () -> Unit = {},
     text: String = "Text",
     enabled: Boolean = true,
+    highlighted: Boolean = false,
     colors: ButtonColors = ButtonColors(Color.White, Color.Gray, Color.Gray, Color.Gray),
     modifier: Modifier = Modifier
 )
 {
     Button(
         onClick = onClick,
-        colors = colors,
-        border = BorderStroke(2.dp, Color.Gray),
+        colors = if(!highlighted) colors else ButtonDefaults.buttonColors(colorResource(R.color.button_blue), Color.White),
+        border = BorderStroke(2.dp, color = if(!highlighted) Color.Gray else colorResource(R.color.button_blue_border)),
         shape = RoundedCornerShape(30),
         enabled = enabled,
         contentPadding = PaddingValues(8.dp),
@@ -232,3 +212,4 @@ fun TitleButton(
         )
     }
 }
+

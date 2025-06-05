@@ -17,8 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -38,9 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.langlearnkt.R
-import com.example.langlearnkt.data.entities.LessonMetaData
-import com.example.langlearnkt.data.lesson1
-import com.example.langlearnkt.ui.lessonMetaDataToLoad
+import com.example.langlearnkt.data.LessonMetaDataToLoad
 import com.example.langlearnkt.ui.screenPathes
 import com.example.langlearnkt.ui.theme.fontFamilies
 import com.example.langlearnkt.viewmodels.LessonsListViewModel
@@ -53,7 +49,6 @@ fun LessonsListScreen(
     viewModel: LessonsListViewModel = viewModel()
 ){
     val lessonsData = viewModel.lessonItems.observeAsState(emptyList())
-    val isLoading = viewModel.isLoading.observeAsState(false)
 
     LaunchedEffect(Unit) {
         viewModel.loadLessons()
@@ -97,7 +92,7 @@ fun LessonListItem(data: LessonsListViewModel.LessonListItem, navController: Nav
         .padding(horizontal = 15.dp, vertical = 0.dp)
         .fillMaxWidth()
         .clickable {
-            lessonMetaDataToLoad.metadata = metadata
+            LessonMetaDataToLoad.metadata = metadata
             navController.navigate(screenPathes.lesson)
         }
     ) {
