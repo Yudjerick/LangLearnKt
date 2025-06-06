@@ -88,5 +88,6 @@ dependencies {
     implementation("nl.dionsegijn:konfetti-compose:2.0.5")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+    implementation ("io.github.ehsannarmani:compose-charts:latest_version")
 
 }

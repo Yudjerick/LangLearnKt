@@ -10,4 +10,6 @@
     <color name="dark_purple">#966DBE</color>
     <color name="button_blue">#305EC5</color>
     <color name="button_blue_border">#282895</color>
+    <color name="green_right">#67D57F</color>
+    <color name="red_wrong">#E2331C</color>
 </resources>

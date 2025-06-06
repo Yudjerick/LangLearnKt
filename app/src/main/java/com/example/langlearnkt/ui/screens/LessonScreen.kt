@@ -84,7 +84,7 @@ fun LessonScreen(
             TransparentCloseButton({navController.navigate(ScreenRoutes.LessonList)})
             RoundedProgressBar(
                 (currentTaskIdx.toFloat() / viewModel.lesson.content.tasks.count().toFloat()),
-                Color.Green,
+                colorResource(R.color.green_right),
                 Color.Gray,
                 modifier = Modifier.padding(horizontal = 10.dp)
             )
@@ -109,6 +109,11 @@ fun LessonScreen(
         if(taskStatus.value != LessonViewModel.TaskStatus.Unchecked){
             ModalBottomSheet(
                 onDismissRequest = {viewModel.nextTask()},
+                containerColor =
+                    if(taskStatus.value == LessonViewModel.TaskStatus.Right)
+                        colorResource(R.color.green_right)
+                    else
+                        colorResource(R.color.red_wrong)
             )
             {
                 Column(
@@ -119,13 +124,13 @@ fun LessonScreen(
                         LessonViewModel.TaskStatus.Right ->
                             Text(
                                 text = "Верно",
-                                color = Color.Green,
+                                color = Color.White,
                                 fontSize = 20.sp,
                             )
                         LessonViewModel.TaskStatus.Wrong ->
                             Text(
                                 text = "Неверно",
-                                color = Color.Red,
+                                color = Color.White,
                                 fontSize = 20.sp,
                             )
                         LessonViewModel.TaskStatus.Unchecked -> {}
