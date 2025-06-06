@@ -40,10 +40,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.langlearnkt.R
+import com.example.langlearnkt.ScreenRoutes
 import com.example.langlearnkt.data.entities.OrderTask
 import com.example.langlearnkt.data.entities.TitleParagraphTask
 import com.example.langlearnkt.ui.components.LL_FunctionButton
-import com.example.langlearnkt.ui.screenPathes
 import com.example.langlearnkt.ui.screens.tasks.OrderTaskScreen
 import com.example.langlearnkt.ui.screens.tasks.TitleParagraphTaskScreen
 import com.example.langlearnkt.viewmodels.LessonViewModel
@@ -62,7 +62,7 @@ fun LessonScreen(
     LaunchedEffect(Unit) { viewModel.loadLesson(lessonId) }
     LaunchedEffect(Unit) {
         viewModel.finishedEvent.collectLatest {
-            navController.navigate(screenPathes.lessonFinished)
+            navController.navigate(ScreenRoutes.LessonFinished(viewModel.tasksResults.map { x -> x!! }))
         }
     }
     if(viewModel.isLoading.observeAsState().value!!){
@@ -81,7 +81,7 @@ fun LessonScreen(
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            TransparentCloseButton({navController.navigate(screenPathes.lessonsList)})
+            TransparentCloseButton({navController.navigate(ScreenRoutes.LessonList)})
             RoundedProgressBar(
                 (currentTaskIdx.toFloat() / viewModel.lesson.content.tasks.count().toFloat()),
                 Color.Green,

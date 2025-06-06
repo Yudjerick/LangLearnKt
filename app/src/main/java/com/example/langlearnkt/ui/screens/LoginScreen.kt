@@ -34,9 +34,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.langlearnkt.R
+import com.example.langlearnkt.ScreenRoutes
 import com.example.langlearnkt.ui.components.LL_FunctionContentButton
 import com.example.langlearnkt.ui.components.LL_TextField
-import com.example.langlearnkt.ui.screenPathes
 import com.example.langlearnkt.ui.theme.fontFamilies
 import com.example.langlearnkt.viewmodels.LoginScreenViewModel
 import com.example.langlearnkt.viewmodels.AuthRequestState
@@ -53,7 +53,7 @@ fun LoginScreen(
     val regSuccess = viewModel.regSuccess.observeAsState(AuthRequestState.WAIT)
     LaunchedEffect(Unit) {
         viewModel.loggedInEvent.collectLatest {
-            navController.navigate(screenPathes.lessonsList)
+            navController.navigate(ScreenRoutes.LessonList)
         }
     }
     Column(
@@ -131,7 +131,7 @@ fun LoginScreen(
                             "",
                             TextLinkStyles(SpanStyle(color = Color.Blue))
                         ) {
-                            navController.navigate(screenPathes.register)
+                            navController.navigate(ScreenRoutes.Register)
                         }
                     withLink(link) { append("Зарегистрируйтесь") }
                 },

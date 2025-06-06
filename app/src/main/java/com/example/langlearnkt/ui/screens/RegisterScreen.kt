@@ -34,10 +34,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.langlearnkt.R
+import com.example.langlearnkt.ScreenRoutes
 import com.example.langlearnkt.ui.components.LL_FunctionButton
 import com.example.langlearnkt.ui.components.LL_FunctionContentButton
 import com.example.langlearnkt.ui.components.LL_TextField
-import com.example.langlearnkt.ui.screenPathes
 import com.example.langlearnkt.ui.theme.fontFamilies
 import com.example.langlearnkt.viewmodels.AuthRequestState
 import com.example.langlearnkt.viewmodels.RegisterScreenViewModel
@@ -55,7 +55,7 @@ fun RegisterScreen(
     val regSuccess = viewModel.regSuccess.observeAsState(AuthRequestState.WAIT)
     LaunchedEffect(Unit) {
         viewModel.loggedInEvent.collectLatest {
-            navController.navigate(screenPathes.lessonsList)
+            navController.navigate(ScreenRoutes.LessonList)
         }
     }
     Column(
@@ -133,7 +133,7 @@ fun RegisterScreen(
                             "",
                             TextLinkStyles(SpanStyle(color = Color.Blue))
                         ) {
-                            navController.navigate(screenPathes.login)
+                            navController.navigate(ScreenRoutes.Login)
                         }
                     withLink(link) { append("Войдите в систему") }
                 },

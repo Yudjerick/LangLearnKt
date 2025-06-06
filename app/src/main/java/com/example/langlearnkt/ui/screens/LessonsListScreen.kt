@@ -35,9 +35,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.langlearnkt.LessonRoute
 import com.example.langlearnkt.R
-import com.example.langlearnkt.ui.screenPathes
+import com.example.langlearnkt.ScreenRoutes
 import com.example.langlearnkt.ui.theme.fontFamilies
 import com.example.langlearnkt.viewmodels.LessonsListViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -60,7 +59,7 @@ fun LessonsListScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            ControlMenuButton({navController.navigate(screenPathes.controlMenu)})
+            ControlMenuButton({navController.navigate(ScreenRoutes.ControlMenu)})
             FirebaseAuth.getInstance().currentUser?.email?.let {
                 Text(
                     text = it,
@@ -93,7 +92,7 @@ fun LessonListItem(data: LessonsListViewModel.LessonListItem, navController: Nav
         .fillMaxWidth()
         .clickable {
             //LessonMetaDataToLoad.metadata = metadata
-            navController.navigate(LessonRoute(metadata.id!!))
+            navController.navigate(ScreenRoutes.Lesson(metadata.id!!))
         }
     ) {
         Box(

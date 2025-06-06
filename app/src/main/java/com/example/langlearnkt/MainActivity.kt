@@ -1,7 +1,6 @@
 package com.example.langlearnkt
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedContentTransitionScope
@@ -12,15 +11,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import androidx.room.Room
-import com.example.langlearnkt.data.converters.RoomTypeConverters
-import com.example.langlearnkt.data.entities.Lesson
-import com.example.langlearnkt.data.lesson1
-import com.example.langlearnkt.data.lesson2
 import com.example.langlearnkt.data.localcache.AppDatabase
-import com.example.langlearnkt.data.repositories.LessonRepository
 import com.example.langlearnkt.ui.screens.LoginScreen
 import com.example.langlearnkt.ui.screens.RegisterScreen
-import com.example.langlearnkt.ui.screenPathes
 import com.example.langlearnkt.ui.screens.ControlMenuScreen
 import com.example.langlearnkt.ui.screens.LessonFinishedScreen
 import com.example.langlearnkt.ui.screens.LessonScreen
@@ -32,15 +25,9 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
 class MainActivity : ComponentActivity() {
-// ...
-// Initialize Firebase Auth
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Firebase.firestore
-
         val db = Room.databaseBuilder(
             applicationContext,
             AppDatabase::class.java, "db"
@@ -51,45 +38,42 @@ class MainActivity : ComponentActivity() {
             //LessonRepository().saveLesson(lesson1)
             //LessonRepository().saveLesson(lesson2)
         }
-        
-
-        var startScreenPath = screenPathes.login
-        var currentUser = Firebase.auth.currentUser
-        //currentUser = null
+        var startScreenPath: Any = ScreenRoutes.Login
+        val currentUser = Firebase.auth.currentUser
         if (currentUser != null) {
-            startScreenPath = screenPathes.lessonsList
+            startScreenPath = ScreenRoutes.LessonList
         }
-
-
 
         setContent {
             val navController = rememberNavController()
             NavHost(
                 navController = navController,
-                startDestination = startScreenPath,
+                startDestination = ScreenRoutes.Login,
                 enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(300)) },
                 exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(300)) },
                 popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(300)) },
                 popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(300)) },
                 builder = {
-                    composable(screenPathes.lessonFinished) {
-                        LessonFinishedScreen(navController)
+                    composable<ScreenRoutes.LessonFinished> {
+                        backStackEntry ->
+                        val route: ScreenRoutes.LessonFinished = backStackEntry.toRoute()
+                        LessonFinishedScreen(navController, route.results)
                     }
-                    composable(screenPathes.login) {
+                    composable<ScreenRoutes.Login> {
                         LoginScreen(navController)
                     }
-                    composable(screenPathes.register) {
+                    composable<ScreenRoutes.Register> {
                         RegisterScreen(navController)
                     }
-                    composable<LessonRoute>{
+                    composable<ScreenRoutes.Lesson>{
                         backStackEntry ->
-                        val lessonRoute: LessonRoute = backStackEntry.toRoute()
+                        val lessonRoute: ScreenRoutes.Lesson = backStackEntry.toRoute()
                         LessonScreen(navController, lessonRoute.lessonId)
                     }
-                    composable(screenPathes.lessonsList) {
+                    composable<ScreenRoutes.LessonList> {
                         LessonsListScreen(navController)
                     }
-                    composable(screenPathes.controlMenu) {
+                    composable<ScreenRoutes.ControlMenu> {
                         ControlMenuScreen(navController)
                     }
                 }
@@ -98,5 +82,19 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Serializable
-data class LessonRoute(val lessonId: String)
+
+class ScreenRoutes{
+    @Serializable
+    data class Lesson(val lessonId: String)
+    @Serializable
+    data class LessonFinished(val results: List<Float>)
+    //data class LessonFinished(val results: String)
+    @Serializable
+    object Login
+    @Serializable
+    object Register
+    @Serializable
+    object LessonList
+    @Serializable
+    object ControlMenu
+}

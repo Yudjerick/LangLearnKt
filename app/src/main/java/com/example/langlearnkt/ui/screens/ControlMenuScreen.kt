@@ -16,8 +16,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.langlearnkt.ScreenRoutes
 import com.example.langlearnkt.ui.components.LL_FunctionButton
-import com.example.langlearnkt.ui.screenPathes
 import com.example.langlearnkt.viewmodels.ControlMenuViewModel
 import com.google.firebase.auth.FirebaseAuth
 
@@ -29,7 +29,7 @@ fun ControlMenuScreen(navController: NavController, viewModel: ControlMenuViewMo
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            TransparentCloseButton({navController.navigate(screenPathes.lessonsList)})
+            TransparentCloseButton({navController.navigate(ScreenRoutes.LessonList)})
             FirebaseAuth.getInstance().currentUser?.email?.let {
                 Text(
                     text = it,
@@ -43,7 +43,7 @@ fun ControlMenuScreen(navController: NavController, viewModel: ControlMenuViewMo
         LL_FunctionButton(
             onClick = {
                 viewModel.signOut()
-                navController.navigate(screenPathes.login)
+                navController.navigate(ScreenRoutes.Login)
             },
             text = "Выйти из аккаунта"
         )
