@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.langlearnkt"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -86,8 +86,8 @@ dependencies {
 
     implementation("com.google.code.gson:gson:2.13.1")
     implementation("nl.dionsegijn:konfetti-compose:2.0.5")
-
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
-    implementation ("io.github.ehsannarmani:compose-charts:latest_version")
+
+    implementation("co.yml:ycharts:2.1.0")
 
 }
